@@ -4,11 +4,19 @@ def analyze_log(log):
             "type": "Dependency Issue",
             "fix": "Install missing package using pip install numpy"
         }
+
+    elif "AssertionError" in log:   # 👈 ADD HERE
+        return {
+            "type": "Test Failure",
+            "fix": "Check failed test case and fix logic"
+        }
+
     elif "failed" in log:
         return {
             "type": "General Failure",
             "fix": "Check logs and retry the pipeline"
         }
+
     else:
         return {
             "type": "Unknown",
@@ -17,7 +25,7 @@ def analyze_log(log):
 
 
 # Test run
-with open("data/log1.txt", "r") as file:
+with open("data/log2.txt", "r") as file:
     log = file.read()
 
 result = analyze_log(log)
