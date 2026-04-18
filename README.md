@@ -14,11 +14,11 @@ This project analyzes pipeline logs and automatically detects failure types and 
 
 ## ⚙️ Features (Current)
 
-* Detects dependency errors
-* Detects test failures
-* Suggests fixes automatically
-* Works with multiple log files
-
+- Supports multi-log analysis (automatic detection from multiple files)
+- Detects dependency errors  
+- Detects test failures  
+- Suggests fixes automatically  
+- Works with multiple log files  
 ---
 
 ## 🏗️ Project Structure
