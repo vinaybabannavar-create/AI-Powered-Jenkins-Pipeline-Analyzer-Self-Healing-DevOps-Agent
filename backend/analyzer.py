@@ -1,3 +1,5 @@
+import os
+
 def analyze_log(log):
     if "ModuleNotFoundError" in log:
         return {
@@ -5,7 +7,7 @@ def analyze_log(log):
             "fix": "Install missing package using pip install numpy"
         }
 
-    elif "AssertionError" in log:   # 👈 ADD HERE
+    elif "AssertionError" in log:
         return {
             "type": "Test Failure",
             "fix": "Check failed test case and fix logic"
@@ -24,11 +26,17 @@ def analyze_log(log):
         }
 
 
-# Test run
-with open("data/log2.txt", "r") as file:
-    log = file.read()
+# 🔥 Day 3: Multi-log analyzer
+log_folder = "data"
 
-result = analyze_log(log)
+for filename in os.listdir(log_folder):
+    file_path = os.path.join(log_folder, filename)
 
-print("Failure Type:", result["type"])
-print("Suggested Fix:", result["fix"])
+    with open(file_path, "r") as file:
+        log = file.read()
+
+    result = analyze_log(log)
+
+    print(f"\n📄 {filename}")
+    print("Failure Type:", result["type"])
+    print("Suggested Fix:", result["fix"])
