@@ -1,39 +1,46 @@
 import os
 
 def analyze_log(log):
-    if "ModuleNotFoundError" in log:
+    log_lower = log.lower()
+
+    if "modulenotfounderror" in log_lower:
         return {
             "type": "Dependency Issue",
             "reason": "Missing Python package detected in the environment",
-            "fix": "Install missing package using pip install <package_name>"
+            "fix": "Install missing package using pip install <package_name>",
+            "confidence": "High"
         }
 
-    elif "AssertionError" in log:
+    elif "assertionerror" in log_lower:
         return {
             "type": "Test Failure",
             "reason": "A test case failed due to incorrect output",
-            "fix": "Check failed test case and fix logic"
+            "fix": "Check failed test case and fix logic",
+            "confidence": "High"
         }
 
-    elif "timeout" in log.lower() or "timed out" in log.lower():
+    elif "timeout" in log_lower or "timed out" in log_lower:
         return {
             "type": "Timeout Error",
             "reason": "Process exceeded time limit",
-            "fix": "Optimize code or increase timeout settings"
+            "fix": "Optimize code or increase timeout settings",
+            "confidence": "Medium"
         }
 
-    elif "failed" in log.lower():
+    elif "failed" in log_lower:
         return {
             "type": "General Failure",
             "reason": "Pipeline execution failed",
-            "fix": "Check logs and retry the pipeline"
+            "fix": "Check logs and retry the pipeline",
+            "confidence": "Medium"
         }
 
     else:
         return {
             "type": "Unknown",
             "reason": "Could not determine the issue from logs",
-            "fix": "Manual debugging required"
+            "fix": "Manual debugging required",
+            "confidence": "Low"
         }
 
 
@@ -56,3 +63,4 @@ for filename in os.listdir(log_folder):
         print("Type:", result["type"])
         print("Reason:", result["reason"])
         print("Fix:", result["fix"])
+        print("Confidence:", result["confidence"]) 
