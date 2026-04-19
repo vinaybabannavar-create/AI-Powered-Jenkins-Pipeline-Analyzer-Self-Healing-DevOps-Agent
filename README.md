@@ -18,7 +18,9 @@ This project analyzes pipeline logs and automatically detects failure types and 
 - Detects dependency errors  
 - Detects test failures  
 - Suggests fixes automatically  
-- Works with multiple log files  
+- Works with multiple log files
+- Provides detailed reasoning for each detected failure
+- Detects timeout errors and improves classification accuracy  
 ---
 
 ## 🏗️ Project Structure
