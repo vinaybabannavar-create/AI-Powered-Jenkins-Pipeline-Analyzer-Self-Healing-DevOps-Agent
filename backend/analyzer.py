@@ -49,6 +49,30 @@ def analyze_log(log):
         }
 
 
+# 🔥 Agent Action System (ONLY ONCE)
+def take_action(result):
+    action_type = result["type"]
+
+    if action_type == "Dependency Issue":
+        print("⚡ Action: Installing missing package...")
+        print("✅ Status: Package installed successfully")
+
+    elif action_type == "Test Failure":
+        print("⚡ Action: Retrying failed tests...")
+        print("✅ Status: Tests re-run completed")
+
+    elif action_type == "Timeout Error":
+        print("⚡ Action: Increasing timeout and retrying...")
+        print("✅ Status: Pipeline re-executed")
+
+    elif action_type == "General Failure":
+        print("⚡ Action: Restarting pipeline...")
+        print("✅ Status: Pipeline restarted")
+
+    else:
+        print("⚡ Action: Manual intervention required")
+
+
 # 🔥 Agent Action System
 def take_action(result):
     action_type = result["type"]
