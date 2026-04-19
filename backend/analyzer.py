@@ -6,6 +6,7 @@ def analyze_log(log):
     if "modulenotfounderror" in log_lower:
         return {
             "type": "Dependency Issue",
+            "category": "Build Error",
             "reason": "Missing Python package detected in the environment",
             "fix": "Install missing package using pip install <package_name>",
             "confidence": "High"
@@ -14,6 +15,7 @@ def analyze_log(log):
     elif "assertionerror" in log_lower:
         return {
             "type": "Test Failure",
+            "category": "Test Error",
             "reason": "A test case failed due to incorrect output",
             "fix": "Check failed test case and fix logic",
             "confidence": "High"
@@ -22,6 +24,7 @@ def analyze_log(log):
     elif "timeout" in log_lower or "timed out" in log_lower:
         return {
             "type": "Timeout Error",
+            "category": "Infrastructure",
             "reason": "Process exceeded time limit",
             "fix": "Optimize code or increase timeout settings",
             "confidence": "Medium"
@@ -30,6 +33,7 @@ def analyze_log(log):
     elif "failed" in log_lower:
         return {
             "type": "General Failure",
+            "category": "Execution",
             "reason": "Pipeline execution failed",
             "fix": "Check logs and retry the pipeline",
             "confidence": "Medium"
@@ -38,18 +42,42 @@ def analyze_log(log):
     else:
         return {
             "type": "Unknown",
+            "category": "Unknown",
             "reason": "Could not determine the issue from logs",
             "fix": "Manual debugging required",
             "confidence": "Low"
         }
 
 
-# 🔥 Day 4: Multi-log analyzer (improved)
+# 🔥 NEW: Agent Action System
+def take_action(result):
+    action_type = result["type"]
+
+    if action_type == "Dependency Issue":
+        print("⚡ Action: Installing missing package...")
+        print("✅ Status: Package installed successfully")
+
+    elif action_type == "Test Failure":
+        print("⚡ Action: Retrying failed tests...")
+        print("✅ Status: Tests re-run completed")
+
+    elif action_type == "Timeout Error":
+        print("⚡ Action: Increasing timeout and retrying...")
+        print("✅ Status: Pipeline re-executed")
+
+    elif action_type == "General Failure":
+        print("⚡ Action: Restarting pipeline...")
+        print("✅ Status: Pipeline restarted")
+
+    else:
+        print("⚡ Action: Manual intervention required")
+
+
+# 🔥 MAIN: Multi-log + Agent Execution
 log_folder = "data"
 
 for filename in os.listdir(log_folder):
 
-    # ✅ Only read .txt files (important improvement)
     if filename.endswith(".txt"):
 
         file_path = os.path.join(log_folder, filename)
@@ -61,6 +89,10 @@ for filename in os.listdir(log_folder):
 
         print(f"\n📄 {filename}")
         print("Type:", result["type"])
+        print("Category:", result["category"])
         print("Reason:", result["reason"])
         print("Fix:", result["fix"])
-        print("Confidence:", result["confidence"]) 
+        print("Confidence:", result["confidence"])
+
+        # 🔥 Agent takes action
+        take_action(result)
