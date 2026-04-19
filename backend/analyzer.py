@@ -49,7 +49,7 @@ def analyze_log(log):
         }
 
 
-# 🔥 NEW: Agent Action System
+# 🔥 Agent Action System
 def take_action(result):
     action_type = result["type"]
 
@@ -75,6 +75,7 @@ def take_action(result):
 
 # 🔥 MAIN: Multi-log + Agent Execution
 log_folder = "data"
+total_logs = 0
 
 for filename in os.listdir(log_folder):
 
@@ -96,3 +97,9 @@ for filename in os.listdir(log_folder):
 
         # 🔥 Agent takes action
         take_action(result)
+
+        total_logs += 1
+
+
+# ✅ FINAL SUMMARY (CORRECT PLACE)
+print(f"\n📊 Summary: Analyzed {total_logs} logs successfully")
