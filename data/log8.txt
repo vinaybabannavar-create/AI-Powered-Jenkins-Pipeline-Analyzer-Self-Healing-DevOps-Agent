@@ -1,0 +1,4 @@
+Stage checkout failed
+Repository clone returned non-zero exit code
+Workspace preparation error
+Build could not proceed

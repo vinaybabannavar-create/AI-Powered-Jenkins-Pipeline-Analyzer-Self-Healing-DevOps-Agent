@@ -1,0 +1,4 @@
+Build process exited unexpectedly
+Worker node disconnected during stage 3
+Artifact upload failed
+Pipeline marked as unstable

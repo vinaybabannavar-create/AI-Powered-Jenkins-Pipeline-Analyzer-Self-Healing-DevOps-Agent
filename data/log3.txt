@@ -1,1 +1,3 @@
-Process timed out after 30 seconds
+Build timed out after 30 minutes
+Stage Deploy exceeded time limit
+Timeout error in pipeline execution

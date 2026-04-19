@@ -1,0 +1,4 @@
+Test test_payment FAILED
+Retrying test... attempt 2 of 3
+Test passed on second attempt
+intermittent failure detected in test suite

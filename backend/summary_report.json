@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-04-19 17:49:34",
+  "total_logs": 8,
+  "failure_distribution": {
+    "Dependency Issue": 1,
+    "Code Defect": 2,
+    "Timeout": 1,
+    "Flaky Test": 1,
+    "Configuration Error": 1,
+    "Infrastructure Issue": 1,
+    "Unknown": 1
+  },
+  "confidence_breakdown": {
+    "High": 4,
+    "Medium": 3,
+    "Low": 1
+  },
+  "source_counts": {
+    "regex": 7,
+    "llm": 1
+  },
+  "mttr": {
+    "without_ai": 16.0,
+    "with_ai": 5.0,
+    "improvement": 68.75
+  }
+}

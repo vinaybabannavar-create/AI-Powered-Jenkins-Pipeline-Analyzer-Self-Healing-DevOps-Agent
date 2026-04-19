@@ -1,0 +1,4 @@
+ERROR: Jenkinsfile syntax error at line 23
+Missing environment variable: DOCKER_REGISTRY
+Invalid pipeline configuration detected
+Build aborted due to config error

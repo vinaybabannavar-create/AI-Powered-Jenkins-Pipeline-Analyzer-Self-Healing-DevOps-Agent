@@ -1,0 +1,4 @@
+Out of memory error OOMKilled
+No space left on device
+Container killed by system resource limits
+Build failed due to infrastructure issue

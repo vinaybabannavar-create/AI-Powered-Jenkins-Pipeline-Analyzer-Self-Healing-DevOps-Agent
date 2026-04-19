@@ -1,2 +1,3 @@
-ModuleNotFoundError: No module named 'numpy'
-Build step failed
+ModuleNotFoundError: No module named 'requests'
+pip install failed with exit code 1
+Build failed at dependency stage

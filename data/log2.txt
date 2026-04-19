@@ -1,1 +1,4 @@
-AssertionError: test_login failed
+AssertionError: expected 200 but got 404
+test_user_login FAILED
+TypeError: unsupported operand type
+Build failed
