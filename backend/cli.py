@@ -21,17 +21,35 @@ def process_file(filename):
 
     take_action(result)
 
+    return result["type"]   # 🔥 return type for analytics
+
 
 def analyze_all_logs():
     total = 0
+    stats = {}
+
     print("\n🔍 Analyzing all logs...\n")
 
     for filename in os.listdir(log_folder):
         if filename.endswith(".txt"):
-            process_file(filename)
+
+            issue_type = process_file(filename)
+
+            # 🔥 Collect stats
+            stats[issue_type] = stats.get(issue_type, 0) + 1
             total += 1
 
-    print(f"\n📊 Summary: Analyzed {total} logs successfully")
+    # 🔥 ANALYTICS REPORT
+    print("\n📊 ===== ANALYTICS REPORT =====")
+    print(f"Total Logs: {total}")
+
+    print("\nFailure Distribution:")
+    for key, value in stats.items():
+        print(f"{key}: {value}")
+
+    if stats:
+        most_common = max(stats, key=stats.get)
+        print(f"\n🔥 Most Frequent Issue: {most_common}")
 
 
 def analyze_single_log():
