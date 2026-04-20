@@ -1,0 +1,4 @@
+AssertionError: 404 != 200
+test_api_endpoint FAILED
+Unit test failure detected
+TypeError found

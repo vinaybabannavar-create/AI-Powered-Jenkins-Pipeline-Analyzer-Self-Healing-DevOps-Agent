@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-04-19 17:49:34",
-  "total_logs": 8,
+  "timestamp": "2026-04-20 09:17:50",
+  "total_logs": 20,
   "failure_distribution": {
-    "Dependency Issue": 1,
-    "Code Defect": 2,
-    "Timeout": 1,
-    "Flaky Test": 1,
-    "Configuration Error": 1,
-    "Infrastructure Issue": 1,
-    "Unknown": 1
+    "Dependency Issue": 3,
+    "Flaky Test": 3,
+    "Timeout": 3,
+    "Code Defect": 4,
+    "Configuration Error": 2,
+    "Infrastructure Issue": 3,
+    "Unknown": 2
   },
   "confidence_breakdown": {
-    "High": 4,
-    "Medium": 3,
-    "Low": 1
+    "High": 9,
+    "Medium": 9,
+    "Low": 2
   },
   "source_counts": {
-    "regex": 7,
-    "llm": 1
+    "regex": 18,
+    "llm": 2
   },
   "mttr": {
-    "without_ai": 16.0,
-    "with_ai": 5.0,
-    "improvement": 68.75
+    "without_ai": 15.05,
+    "with_ai": 4.55,
+    "improvement": 69.77
   }
 }

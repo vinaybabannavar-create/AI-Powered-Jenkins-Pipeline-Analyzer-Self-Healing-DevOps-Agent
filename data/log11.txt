@@ -1,0 +1,4 @@
+Build timed out after 45 minutes
+Stage test exceeded deadline
+Pipeline killed by timeout
+Build failed

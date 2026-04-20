@@ -1,0 +1,21 @@
+filename,true_label,predicted_label,correct
+log1.txt,Dependency Issue,Dependency Issue,YES
+log2.txt,Code Defect,Code Defect,YES
+log3.txt,Timeout,Timeout,YES
+log4.txt,Flaky Test,Flaky Test,YES
+log5.txt,Configuration Error,Configuration Error,YES
+log6.txt,Infrastructure Issue,Infrastructure Issue,YES
+log7.txt,Code Defect,Code Defect,YES
+log8.txt,Configuration Error,Unknown,NO
+log9.txt,Dependency Issue,Dependency Issue,YES
+log10.txt,Flaky Test,Flaky Test,YES
+log11.txt,Timeout,Timeout,YES
+log12.txt,Code Defect,Code Defect,YES
+log13.txt,Configuration Error,Configuration Error,YES
+log14.txt,Infrastructure Issue,Infrastructure Issue,YES
+log15.txt,Dependency Issue,Dependency Issue,YES
+log16.txt,Code Defect,Code Defect,YES
+log17.txt,Timeout,Timeout,YES
+log18.txt,Flaky Test,Flaky Test,YES
+log19.txt,Infrastructure Issue,Infrastructure Issue,YES
+log20.txt,Configuration Error,Unknown,NO

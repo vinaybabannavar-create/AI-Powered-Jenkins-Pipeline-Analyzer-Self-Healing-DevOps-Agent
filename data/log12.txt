@@ -1,0 +1,4 @@
+ValueError: invalid literal for int
+Traceback in data_processor.py line 45
+Build failed
+Uncaught exception

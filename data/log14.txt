@@ -1,0 +1,4 @@
+Container OOMKilled
+Memory limit exceeded 512Mi
+Infrastructure resource error
+No space left

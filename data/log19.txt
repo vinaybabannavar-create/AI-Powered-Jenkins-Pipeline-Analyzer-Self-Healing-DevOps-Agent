@@ -1,0 +1,4 @@
+No space left on device
+Disk usage at 100 percent
+Build worker storage full
+Out of memory

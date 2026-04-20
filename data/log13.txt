@@ -1,0 +1,4 @@
+Missing environment variable: AWS_SECRET_KEY
+Jenkinsfile configuration error
+Invalid pipeline setup
+Syntax error

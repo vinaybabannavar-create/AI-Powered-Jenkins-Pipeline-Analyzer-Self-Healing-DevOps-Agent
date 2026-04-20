@@ -1,0 +1,4 @@
+Syntax error in Jenkinsfile at line 15
+Missing closing bracket
+Pipeline configuration invalid
+Config error
