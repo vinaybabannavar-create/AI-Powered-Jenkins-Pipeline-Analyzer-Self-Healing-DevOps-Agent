@@ -1,0 +1,32 @@
+[
+  {
+    "pipeline": "python-flaky-tests",
+    "build": 5,
+    "result": "FAILURE",
+    "type": "Flaky Test",
+    "confidence": "High",
+    "fix": "Auto-retry the flaky stage with exponential backoff",
+    "source": "regex",
+    "timestamp": "2026-04-21 17:50:43"
+  },
+  {
+    "pipeline": "docker-image-build",
+    "build": 5,
+    "result": "FAILURE",
+    "type": "Dependency Issue",
+    "confidence": "High",
+    "fix": "Run pip install -r requirements.txt and rebuild",
+    "source": "regex",
+    "timestamp": "2026-04-21 17:50:49"
+  },
+  {
+    "pipeline": "kubernetes-deploy",
+    "build": 5,
+    "result": "FAILURE",
+    "type": "Infrastructure Issue",
+    "confidence": "Medium",
+    "fix": "Check resource limits, scale up or free disk space",
+    "source": "regex",
+    "timestamp": "2026-04-21 17:50:56"
+  }
+]

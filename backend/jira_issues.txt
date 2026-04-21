@@ -58,3 +58,27 @@ Suggested Fix: Review failing test/line, create Jira issue for dev team
 Confidence: Medium
 Source: regex
 ========================================
+[AUTO] Code Defect Detected
+Reason: Exception or assertion failure found in application code
+Suggested Fix: Review failing test/line, create Jira issue for dev team
+Confidence: Medium
+Source: regex
+========================================
+[AUTO] Code Defect Detected
+Reason: Exception or assertion failure found in application code
+Suggested Fix: Review failing test/line, create Jira issue for dev team
+Confidence: Medium
+Source: regex
+========================================
+[AUTO] Code Defect Detected
+Reason: Exception or assertion failure found in application code
+Suggested Fix: Review failing test/line, create Jira issue for dev team
+Confidence: Medium
+Source: regex
+========================================
+[AUTO] Code Defect Detected
+Reason: Exception or assertion failure found in application code
+Suggested Fix: Review failing test/line, create Jira issue for dev team
+Confidence: Medium
+Source: regex
+========================================

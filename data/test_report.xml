@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="JenkinsPipelineTests" tests="5" failures="2" errors="0" time="12.4">
+  <testcase name="test_login" classname="tests.auth" time="2.1"/>
+  <testcase name="test_payment" classname="tests.payment" time="3.2">
+    <failure message="AssertionError: expected 200 but got 404">
+      test_payment failed at line 45 in payment_test.py
+      Expected status code 200 but received 404
+    </failure>
+  </testcase>
+  <testcase name="test_logout" classname="tests.auth" time="1.8"/>
+  <testcase name="test_register" classname="tests.auth" time="2.9">
+    <failure message="Timeout: test exceeded 30 seconds">
+      test_register timed out at line 78
+      Connection to auth service failed
+    </failure>
+  </testcase>
+  <testcase name="test_profile" classname="tests.user" time="2.4"/>
+</testsuite>
