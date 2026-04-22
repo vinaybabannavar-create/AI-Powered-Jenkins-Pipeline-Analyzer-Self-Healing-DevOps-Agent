@@ -52,9 +52,35 @@ def get_status_icon(result, issue_type):
     else:
         return "🔴"
 
+def _save_to_csv(pipeline, result):
+    csv_path = os.path.join(os.path.dirname(__file__), "analysis_log.csv")
+    file_exists = os.path.exists(csv_path)
+
+    with open(csv_path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            "timestamp", "filename", "type", "category",
+            "reason", "fix", "confidence", "source",
+            "pipeline", "action_taken"
+        ])
+        if not file_exists:
+            writer.writeheader()
+
+        writer.writerow({
+            "timestamp":    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "filename":     f"REST-API-{pipeline}",
+            "type":         result.get("type", ""),
+            "category":     result.get("category", ""),
+            "reason":       result.get("reason", ""),
+            "fix":          result.get("fix", ""),
+            "confidence":   result.get("confidence", ""),
+            "source":       result.get("source", "regex"),
+            "pipeline":     pipeline,
+            "action_taken": str(result.get("action_taken", []))
+        })
+
 def run_jenkins_agent():
     print("\n" + "="*55)
-    print("  🤖 Jenkins AI Agent — Fetching from Mock Jenkins API")
+    print("  [AI] Jenkins AI Agent - Fetching from Mock Jenkins API")
     print("="*55)
 
     # ── Check Jenkins is running ──────────────────────────────
@@ -104,13 +130,16 @@ def run_jenkins_agent():
         result = analyze_log(console_log)
         result = take_action(result)
 
-        print(f"\n   🔍 AI Analysis:")
+        print(f"\n   [SEARCH] AI Analysis:")
         print(f"   Type       : {result['type']}")
         print(f"   Category   : {result['category']}")
         print(f"   Confidence : {result['confidence']}")
         print(f"   Source     : {result.get('source','regex')}")
         print(f"   Reason     : {result['reason']}")
         print(f"   Fix        : {result['fix']}")
+
+        # Save to analysis_log.csv for dashboard history
+        _save_to_csv(pipeline, result)
 
         action = result.get("action_taken", [])
         if action:
