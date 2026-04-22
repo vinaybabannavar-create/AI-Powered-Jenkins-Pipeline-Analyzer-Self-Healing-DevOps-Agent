@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from datetime import datetime
 
 st.set_page_config(
-    page_title="NetSight AI DevOps",
+    page_title="AI DevOps Agent",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -18,179 +18,129 @@ st.set_page_config(
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 * { font-family: 'Inter', sans-serif; }
-
 .main { background: #0a0e1a; }
 .block-container { padding: 1.5rem 2rem; }
-
 .hero-banner {
     background: linear-gradient(135deg, #1a1f3a 0%, #0d1117 50%, #1a2744 100%);
     border: 1px solid #2a3a5c;
     border-radius: 16px;
     padding: 2rem 2.5rem;
     margin-bottom: 1.5rem;
-    position: relative;
-    overflow: hidden;
 }
-.hero-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0;
-    letter-spacing: -0.5px;
-}
-.hero-subtitle {
-    font-size: 0.95rem;
-    color: #6b7db3;
-    margin: 0.3rem 0 0 0;
-}
+.hero-title { font-size: 2rem; font-weight: 700; color: #ffffff; margin: 0; letter-spacing: -0.5px; }
+.hero-subtitle { font-size: 0.95rem; color: #6b7db3; margin: 0.3rem 0 0 0; }
 .hero-badge {
-    display: inline-block;
-    background: #1e3a5f;
-    color: #60a5fa;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    border: 1px solid #2563eb44;
-    margin-bottom: 0.75rem;
+    display: inline-block; background: #1e3a5f; color: #60a5fa;
+    font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem;
+    border-radius: 20px; border: 1px solid #2563eb44; margin-bottom: 0.75rem;
 }
 .glow-line {
     height: 2px;
     background: linear-gradient(90deg, #2563eb, #7c3aed, #2563eb);
-    border-radius: 2px;
-    margin: 1rem 0 0 0;
+    border-radius: 2px; margin: 1rem 0 0 0;
 }
-
 .metric-card {
-    background: #111827;
-    border: 1px solid #1f2937;
-    border-radius: 12px;
-    padding: 1.2rem 1.4rem;
-    text-align: center;
-    transition: border-color 0.2s;
+    background: #111827; border: 1px solid #1f2937;
+    border-radius: 12px; padding: 1.2rem 1.4rem; text-align: center;
 }
 .metric-card:hover { border-color: #2563eb; }
-.metric-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1;
-    margin: 0.3rem 0;
-}
-.metric-label {
-    font-size: 0.75rem;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-}
-.metric-delta-good {
-    font-size: 0.8rem;
-    color: #10b981;
-    font-weight: 600;
-    margin-top: 0.2rem;
-}
-.metric-delta-info {
-    font-size: 0.8rem;
-    color: #60a5fa;
-    font-weight: 600;
-    margin-top: 0.2rem;
-}
-
+.metric-value { font-size: 2rem; font-weight: 700; color: #ffffff; line-height: 1; margin: 0.3rem 0; }
+.metric-label { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+.metric-delta-good { font-size: 0.8rem; color: #10b981; font-weight: 600; margin-top: 0.2rem; }
+.metric-delta-info { font-size: 0.8rem; color: #60a5fa; font-weight: 600; margin-top: 0.2rem; }
 .section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #e5e7eb;
-    margin: 0 0 1rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-size: 1.1rem; font-weight: 600; color: #e5e7eb;
+    margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;
 }
-
-.action-badge {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    margin: 2px;
+.pipeline-card {
+    background: #111827; border: 1px solid #1f2937;
+    border-radius: 12px; padding: 1rem 1.2rem; text-align: center;
 }
-.badge-dep  { background:#1e3a5f; color:#60a5fa; }
-.badge-code { background:#1f2937; color:#f87171; }
-.badge-flaky{ background:#1a2e1a; color:#34d399; }
-.badge-time { background:#2d1f00; color:#fbbf24; }
-.badge-conf { background:#2d1a2d; color:#c084fc; }
-.badge-infra{ background:#1a2d2d; color:#22d3ee; }
-
+.pipeline-name { font-size: 0.7rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+.pipeline-status { font-size: 1.1rem; font-weight: 700; margin: 0.3rem 0; }
+.pipeline-type { font-size: 0.8rem; color: #60a5fa; margin-top: 0.2rem; }
+.pipeline-meta { font-size: 0.72rem; color: #4b5563; margin-top: 0.3rem; }
 .status-bar {
-    background: #111827;
-    border: 1px solid #1f2937;
-    border-radius: 10px;
-    padding: 0.8rem 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    background: #111827; border: 1px solid #1f2937;
+    border-radius: 10px; padding: 0.8rem 1.2rem;
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
 }
 .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 6px #10b981;
-    display: inline-block;
-    margin-right: 6px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981; box-shadow: 0 0 6px #10b981;
+    display: inline-block; margin-right: 6px;
 }
-
 .footer {
-    text-align: center;
-    color: #374151;
-    font-size: 0.75rem;
-    padding: 1.5rem 0 0.5rem;
-    border-top: 1px solid #1f2937;
-    margin-top: 2rem;
+    text-align: center; color: #374151; font-size: 0.75rem;
+    padding: 1.5rem 0 0.5rem; border-top: 1px solid #1f2937; margin-top: 2rem;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-BASE = os.path.dirname(__file__)
-CSV  = os.path.join(BASE, "..", "backend", "analysis_log.csv")
-JSON = os.path.join(BASE, "..", "backend", "summary_report.json")
+BASE          = os.path.dirname(__file__)
+CSV           = os.path.join(BASE, "..", "backend", "analysis_log.csv")
+JSON          = os.path.join(BASE, "..", "backend", "summary_report.json")
+PIPELINE_JSON = os.path.join(BASE, "..", "backend", "pipeline_report.json")
 
 @st.cache_data(ttl=5)
 def load_csv():
     if os.path.exists(CSV):
-        return pd.read_csv(CSV, encoding="latin-1")
+        try:
+            return pd.read_csv(CSV, encoding="utf-8")
+        except Exception:
+            return pd.read_csv(CSV, encoding="latin-1")
     return pd.DataFrame()
 
 @st.cache_data(ttl=5)
 def load_summary():
     if os.path.exists(JSON):
-        with open(JSON) as f:
+        with open(JSON, encoding="utf-8") as f:
             return json.load(f)
     return {}
 
-df      = load_csv()
-summary = load_summary()
+@st.cache_data(ttl=5)
+def load_pipeline():
+    if os.path.exists(PIPELINE_JSON):
+        with open(PIPELINE_JSON, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+df            = load_csv()
+summary       = load_summary()
+pipeline_data = load_pipeline()
 
 # ── Hero Banner ───────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero-banner">
     <div class="hero-badge">🏆 Hack2Hire 1.0 — Problem 08</div>
     <h1 class="hero-title">🤖 AI-Powered Jenkins Pipeline Analyzer</h1>
-    <p class="hero-subtitle">Self-Healing DevOps Agent • Gemini LLM + Regex Classifier • Real-time Anomaly Detection</p>
+    <p class="hero-subtitle">
+        Self-Healing DevOps Agent &nbsp;•&nbsp;
+        Gemini LLM + Regex Classifier &nbsp;•&nbsp;
+        Real-time Anomaly Detection
+    </p>
     <div class="glow-line"></div>
 </div>
 """, unsafe_allow_html=True)
 
 # ── Status Bar ────────────────────────────────────────────────────────────────
 now = datetime.now().strftime("%d %b %Y • %H:%M:%S")
+total_pipelines = len(pipeline_data.get("pipelines", []))
+failed_pipelines = pipeline_data.get("failed_pipelines", 0)
+
 st.markdown(f"""
 <div class="status-bar">
-    <span><span class="status-dot"></span><span style="color:#10b981;font-size:0.8rem;font-weight:600;">Agent Active</span></span>
+    <span>
+        <span class="status-dot"></span>
+        <span style="color:#10b981;font-size:0.8rem;font-weight:600;">Agent Active</span>
+    </span>
     <span style="color:#6b7280;font-size:0.8rem;">Last scan: {now}</span>
+    <span style="color:#6b7280;font-size:0.8rem;">•</span>
+    <span style="color:#6b7280;font-size:0.8rem;">
+        Pipelines: {total_pipelines} monitored • {failed_pipelines} failing
+    </span>
     <span style="color:#6b7280;font-size:0.8rem;">•</span>
     <span style="color:#6b7280;font-size:0.8rem;">T John Institute of Technology | CSE Dept</span>
 </div>
@@ -198,11 +148,11 @@ st.markdown(f"""
 
 # ── Metric Cards ──────────────────────────────────────────────────────────────
 if summary:
-    mttr   = summary.get("mttr", {})
-    src    = summary.get("source_counts", {})
-    total  = summary.get("total_logs", 0)
-    imp    = mttr.get("improvement", 0)
-    saved  = round(mttr.get("without_ai", 0) - mttr.get("with_ai", 0), 1)
+    mttr  = summary.get("mttr", {})
+    src   = summary.get("source_counts", {})
+    total = summary.get("total_logs", 0)
+    imp   = mttr.get("improvement", 0)
+    saved = round(mttr.get("without_ai", 0) - mttr.get("with_ai", 0), 1)
 
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     with c1:
@@ -244,13 +194,44 @@ if summary:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
+# ── Jenkins Pipeline Health ───────────────────────────────────────────────────
+pipelines = pipeline_data.get("pipelines", [])
+if pipelines:
+    st.markdown('<p class="section-title">📡 Jenkins Pipeline Health</p>',
+                unsafe_allow_html=True)
+    cols = st.columns(len(pipelines))
+    for i, p in enumerate(pipelines):
+        result     = p.get("result", "N/A")
+        issue_type = p.get("type", "Unknown")
+        color      = "#ef4444" if result == "FAILURE" else "#10b981" if result == "SUCCESS" else "#f59e0b"
+        icon       = "🔴" if result == "FAILURE" else "🟢" if result == "SUCCESS" else "🟡"
+        name       = p.get("pipeline", "").replace("-", " ").upper()
+        with cols[i]:
+            st.markdown(f"""
+            <div class="pipeline-card">
+                <div class="pipeline-name">{name}</div>
+                <div class="pipeline-status" style="color:{color};">{icon} {result}</div>
+                <div class="pipeline-type">{issue_type}</div>
+                <div class="pipeline-meta">
+                    Build #{p.get('build','N/A')} •
+                    {p.get('duration_sec',0)}s •
+                    ✅{p.get('tests_pass',0)} ❌{p.get('tests_fail',0)}
+                </div>
+                <div class="pipeline-meta" style="color:#6b7280;margin-top:4px;">
+                    {p.get('action','No action')}
+                </div>
+            </div>""", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
 # ── Charts Row ────────────────────────────────────────────────────────────────
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.markdown('<p class="section-title">📊 Failure Distribution</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-title">📊 Failure Distribution</p>',
+                unsafe_allow_html=True)
     if summary and "failure_distribution" in summary:
-        fd = summary["failure_distribution"]
+        fd     = summary["failure_distribution"]
         COLORS = ["#3b82f6","#ef4444","#10b981","#f59e0b","#8b5cf6","#06b6d4","#f97316"]
         fig = px.pie(
             values=list(fd.values()),
@@ -274,7 +255,8 @@ with col1:
         st.plotly_chart(fig, use_container_width=True)
 
 with col2:
-    st.markdown('<p class="section-title">⏱️ MTTR: AI vs Manual Resolution</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-title">⏱️ MTTR: AI vs Manual Resolution</p>',
+                unsafe_allow_html=True)
     if summary and "mttr" in summary:
         mttr = summary["mttr"]
         fig2 = go.Figure()
@@ -332,7 +314,8 @@ if summary:
     src  = summary.get("source_counts", {})
 
     with col3:
-        st.markdown('<p class="section-title">🎯 Confidence Breakdown</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-title">🎯 Confidence Breakdown</p>',
+                    unsafe_allow_html=True)
         fig3 = go.Figure(go.Bar(
             x=["High", "Medium", "Low"],
             y=[conf.get("High",0), conf.get("Medium",0), conf.get("Low",0)],
@@ -352,7 +335,8 @@ if summary:
         st.plotly_chart(fig3, use_container_width=True)
 
     with col4:
-        st.markdown('<p class="section-title">🧠 Classification Source</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-title">🧠 Classification Source</p>',
+                    unsafe_allow_html=True)
         fig4 = go.Figure(go.Bar(
             x=["Regex (Layer 1)", "Gemini LLM (Layer 2)"],
             y=[src.get("regex",0), src.get("llm",0)],
@@ -374,7 +358,8 @@ if summary:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ── Full Analysis Log ─────────────────────────────────────────────────────────
-st.markdown('<p class="section-title">📋 Full Analysis Log</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-title">📋 Full Analysis Log</p>',
+            unsafe_allow_html=True)
 
 if not df.empty:
     def color_confidence(val):
@@ -383,11 +368,18 @@ if not df.empty:
         return "background-color:#3b0764;color:#e879f9;font-weight:600;"
 
     def color_source(val):
-        if val == "llm":   return "background-color:#1e1b4b;color:#a78bfa;font-weight:600;"
+        if val == "llm": return "background-color:#1e1b4b;color:#a78bfa;font-weight:600;"
         return "background-color:#0c1a2e;color:#60a5fa;font-weight:600;"
 
+    # Show pipeline column if present
+    display_cols = ["timestamp","filename","type","category",
+                    "reason","fix","confidence","source","action_taken"]
+    if "pipeline" in df.columns:
+        display_cols = ["timestamp","filename","pipeline","type","category",
+                        "reason","fix","confidence","source","action_taken"]
+
     styled = (
-        df.style
+        df[display_cols].style
         .applymap(color_confidence, subset=["confidence"])
         .applymap(color_source,     subset=["source"])
         .set_properties(**{
@@ -411,11 +403,17 @@ if not df.empty:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ── Self-Healing Actions ──────────────────────────────────────────────────────
-st.markdown('<p class="section-title">⚡ Self-Healing Actions Taken</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-title">⚡ Self-Healing Actions Taken</p>',
+            unsafe_allow_html=True)
 
 if not df.empty and "action_taken" in df.columns:
-    action_df = df[["timestamp","filename","type","action_taken"]].copy()
-    action_df.columns = ["Timestamp","File","Issue Type","Action Taken"]
+    action_cols = ["timestamp", "filename", "type", "action_taken"]
+    if "pipeline" in df.columns:
+        action_cols = ["timestamp", "filename", "pipeline", "type", "action_taken"]
+
+    action_df = df[action_cols].copy()
+    action_df.columns = [c.replace("_", " ").title() for c in action_cols]
+
     st.dataframe(
         action_df.style.set_properties(**{
             "background-color": "#111827",
@@ -432,7 +430,7 @@ st.markdown(f"""
     🤖 AI-Powered Jenkins Pipeline Analyzer &nbsp;•&nbsp;
     Hack2Hire 1.0 — Problem 08 &nbsp;•&nbsp;
     T John Institute of Technology &nbsp;•&nbsp;
-    Built by Vinay Babannavar & Preetam Anil Kage &nbsp;•&nbsp;
+    Built by Vinay Babannavar &amp; Preetam Anil Kage &nbsp;•&nbsp;
     {datetime.now().strftime("%d %b %Y")}
 </div>
 """, unsafe_allow_html=True)
