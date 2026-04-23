@@ -5,7 +5,7 @@ import time
 
 from google import genai
 
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", "YOUR_KEY_HERE"))
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", "AIzaSyByoOyKAeKCVQSA5MiEXKGJ_egZJfNgeUM"))
 
 # ── Regex patterns for all 6 required categories ─────────────────────────────
 PATTERNS = {
