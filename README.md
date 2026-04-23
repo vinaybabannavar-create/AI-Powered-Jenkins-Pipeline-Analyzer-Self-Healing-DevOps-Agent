@@ -201,15 +201,10 @@ The demo covers the full end-to-end flow — Mock Jenkins server running, Jenkin
 
 ---
 
-## 🌐 Deployed Link
+## 🌐 Deployed Link:
 
-This project runs locally using a Mock Jenkins REST API server and local file system. The full system is accessible after following the setup instructions above.
+https://ai-powered-jenkins-pipeline-analyzer.onrender.com
 
-| Component | Local URL |
-|---|---|
-| Streamlit Dashboard | `http://localhost:8501` |
-| Mock Jenkins API | `http://localhost:5000` |
-| Jenkins API Root | `http://localhost:5000/api/json` |
 
 ---
 
