@@ -1,7 +1,6 @@
 # 🤖 AI-Powered Jenkins Pipeline Analyzer & Self-Healing DevOps Agent
-
 > Automatically detects, classifies, and heals Jenkins pipeline failures using AI — without human intervention.
-> 
+
 ---
 
 ## 🎯 Problem Statement
@@ -36,7 +35,6 @@ What makes this unique is the combination of deterministic regex classification 
 ## 🏗️ Architecture / Flow
 
 ![System Architecture](architecture.png)
-
 Mock Jenkins Server (mock_jenkins.py · Flask · Port 5000)
 ↓
 Jenkins Agent (jenkins_agent.py)
@@ -200,6 +198,18 @@ The demo covers the full end-to-end flow — Mock Jenkins server running, Jenkin
 **System Architecture:**
 
 ![Architecture Diagram](architecture.png)
+
+---
+
+## 🌐 Deployed Link
+
+This project runs locally using a Mock Jenkins REST API server and local file system. The full system is accessible after following the setup instructions above.
+
+| Component | Local URL |
+|---|---|
+| Streamlit Dashboard | `http://localhost:8501` |
+| Mock Jenkins API | `http://localhost:5000` |
+| Jenkins API Root | `http://localhost:5000/api/json` |
 
 ---
 
