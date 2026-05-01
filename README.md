@@ -311,7 +311,7 @@ Action     : Retrying failed stage with 30s backoff (attempt 1 of 3)
 | Name | Role | GitHub |
 |---|---|---|
 | Vinay Babannavar | Lead Developer — AI Classifier, Jenkins Agent, Dashboard |
-
+| Preetam Anil Kage |
 ---
 
 ## 📌 Hackathon
