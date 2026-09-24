@@ -7,11 +7,26 @@ from dotenv import load_dotenv
 # Load .env file
 load_dotenv()
 
+genai = None
 try:
-    api_key = os.environ.get("GEMINI_API_KEY") or "demo-key"
-    client = genai.Client(api_key=api_key)
-except Exception:
-    client = None
+    from google import genai
+except ImportError:
+    try:
+        import google.generativeai as genai
+    except ImportError:
+        genai = None
+
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
+
+client = None
+if genai:
+    try:
+        api_key = os.environ.get("GEMINI_API_KEY") or ""
+        if api_key and api_key != "demo-key":
+            client = genai.Client(api_key=api_key)
+    except Exception as e:
+        print(f"⚠️ Gemini Client Init Notice: {e}")
+        client = None
 # ── Regex patterns for all 6 required categories ─────────────────────────────
 PATTERNS = {
     "Flaky Test": [
@@ -97,7 +112,7 @@ Log to analyze:
     for attempt in range(2):
         try:
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
+                model=GEMINI_MODEL,
                 contents=prompt
             )
             text = response.text.strip()
