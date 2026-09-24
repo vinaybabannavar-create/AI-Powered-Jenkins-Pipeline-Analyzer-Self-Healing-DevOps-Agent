@@ -37,88 +37,168 @@ def random_duration():
 def random_result():
     return random.choice(["FAILURE", "FAILURE", "SUCCESS"])
 
-# ── Authentic Jenkins HTML Template ──────────────────────────────────────────
+# ── Modern Pitch-Black Jenkins HTML Template ─────────────────────────────────
 JENKINS_BASE_HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{ title }} - Jenkins</title>
+  <title>{{ title }} - Jenkins Automation Server</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Roboto', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.5; }
-    .topbar { background: #1f2937; color: #fff; padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #3b82f6; }
-    .logo-area { display: flex; align-items: center; gap: 10px; }
-    .logo-img { font-size: 1.6rem; }
-    .logo-title { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.5px; }
-    .logo-sub { font-size: 0.72rem; color: #94a3b8; }
-    .nav-bar { background: #334155; color: #e2e8f0; padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
-    .nav-bar a { color: #93c5fd; text-decoration: none; }
-    .nav-bar a:hover { text-decoration: underline; }
-    .main-layout { display: flex; max-width: 1300px; margin: 1.5rem auto; padding: 0 1rem; gap: 24px; }
-    .sidebar { width: 240px; }
-    .sidebar-menu { list-style: none; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; }
-    .sidebar-menu li a { display: flex; align-items: center; gap: 8px; padding: 0.75rem 1rem; color: #334155; text-decoration: none; font-size: 0.88rem; font-weight: 500; border-bottom: 1px solid #f1f5f9; }
-    .sidebar-menu li a:hover { background: #f8fafc; color: #2563eb; }
-    .content { flex: 1; }
-    .card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .badge { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; border-radius: 4px; }
-    .badge-FAILURE { background: #fee2e2; color: #b91c1c; }
-    .badge-SUCCESS { background: #dcfce7; color: #15803d; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #000000 !important;
+      color: #f8fafc;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Background Auroras & Grid */
+    .aurora-container { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; background: #000000; }
+    .aurora-orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.16; animation: floatAurora 20s infinite alternate ease-in-out; }
+    .aurora-1 { width: 650px; height: 650px; background: #4f46e5; top: -100px; left: -100px; }
+    .aurora-2 { width: 700px; height: 700px; background: #06b6d4; bottom: -150px; right: -100px; animation-duration: 25s; }
+    @keyframes floatAurora { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-40px, 80px) scale(0.95); } }
+
+    .bg-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    #mouse-spotlight {
+      position: fixed; inset: 0; pointer-events: none; z-index: 2;
+      background: radial-gradient(800px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(6, 182, 212, 0.18), rgba(99, 102, 241, 0.12) 35%, transparent 80%);
+    }
+
+    .app-wrapper { position: relative; z-index: 10; min-height: 100vh; display: flex; flex-direction: column; background: #000000; }
+
+    /* Top Bar */
+    .topbar {
+      background: #000000 !important; color: #fff; padding: 0.9rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12); position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.95);
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-img {
+      width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #06b6d4);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    }
+    .logo-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.15rem; color: #fff; letter-spacing: -0.5px; }
+    .logo-sub { font-size: 0.72rem; color: #06b6d4; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .nav-bar {
+      background: #000000 !important; color: #94a3b8; padding: 0.6rem 2rem; font-size: 0.82rem;
+      display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .nav-bar a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+    .nav-bar a:hover { text-decoration: underline; color: #67e8f9; }
+
+    .main-layout { display: flex; max-width: 1440px; width: 100%; margin: 1.5rem auto; padding: 0 2rem; gap: 24px; flex: 1; }
+    .sidebar { width: 250px; flex-shrink: 0; }
+    .sidebar-menu { list-style: none; background: #000000; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12); overflow: hidden; }
+    .sidebar-menu li a { display: flex; align-items: center; gap: 10px; padding: 0.85rem 1.1rem; color: #cbd5e1; text-decoration: none; font-size: 0.86rem; font-weight: 600; border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s; }
+    .sidebar-menu li a:hover { background: rgba(99, 102, 241, 0.14); color: #fff; transform: translateX(3px); }
+
+    .content { flex: 1; width: 100%; min-width: 0; }
+    .card {
+      background: #000000; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.8rem; margin-bottom: 1.5rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9); position: relative;
+    }
+    
+    .badge { display: inline-block; padding: 0.25rem 0.65rem; font-size: 0.74rem; font-weight: 700; border-radius: 8px; }
+    .badge-FAILURE { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-SUCCESS { background: rgba(16, 185, 129, 0.18); color: #86efac; border: 1px solid rgba(16, 185, 129, 0.4); }
+
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th { text-align: left; padding: 0.75rem; background: #f8fafc; font-size: 0.75rem; text-transform: uppercase; color: #64748b; border-bottom: 1px solid #e2e8f0; }
-    td { padding: 0.75rem; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; }
-    tr:hover td { background: #f8fafc; }
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.5rem 1rem; background: #2563eb; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: 600; border: none; cursor: pointer; }
-    .btn:hover { background: #1d4ed8; }
-    .btn-secondary { background: #e2e8f0; color: #1e293b; }
-    .btn-secondary:hover { background: #cbd5e1; }
-    .console-box { background: #0f172a; color: #f8fafc; padding: 1.2rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.6; white-space: pre-wrap; max-height: 600px; overflow-y: auto; }
+    th { text-align: left; padding: 0.9rem 1.1rem; background: #050505; font-size: 0.72rem; text-transform: uppercase; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-weight: 700; letter-spacing: 0.08em; }
+    td { padding: 0.9rem 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 0.86rem; color: #cbd5e1; vertical-align: middle; }
+    tr:hover td { background: rgba(99, 102, 241, 0.08); }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 0.55rem 1.1rem;
+      background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; text-decoration: none;
+      border-radius: 10px; font-size: 0.82rem; font-weight: 700; border: none; cursor: pointer;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); transition: all 0.2s ease;
+    }
+    .btn:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); box-shadow: 0 0 30px rgba(99, 102, 241, 0.7); transform: translateY(-1px); }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08); color: #e2e8f0; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: none;
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-1px); }
+
+    .console-box {
+      background: #03060d; color: #e2e8f0; padding: 1.4rem; border-radius: 14px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.84rem; line-height: 1.65;
+      white-space: pre-wrap; max-height: 600px; overflow-y: auto; border: 1px solid rgba(99, 102, 241, 0.35);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="logo-area">
-      <div class="logo-img">⚙️</div>
-      <div>
-        <div class="logo-title">Jenkins Automation Server</div>
-        <div class="logo-sub">Enterprise DevOps CI/CD Engine (Mock/Demo Environment)</div>
+  <div class="aurora-container">
+    <div class="aurora-orb aurora-1"></div>
+    <div class="aurora-orb aurora-2"></div>
+  </div>
+  <div class="bg-grid"></div>
+  <div id="mouse-spotlight"></div>
+
+  <div class="app-wrapper">
+    <div class="topbar">
+      <div class="logo-area">
+        <div class="logo-img">⚙️</div>
+        <div>
+          <div class="logo-title">Jenkins Automation Server</div>
+          <div class="logo-sub">Enterprise DevOps CI/CD Engine</div>
+        </div>
+      </div>
+      <div style="font-size: 0.85rem; color: #cbd5e1;">
+        User: <strong style="color: #fff;">admin</strong> | <a href="http://localhost:8501" style="color: #38bdf8; text-decoration: none; font-weight: 700; background: rgba(6,182,212,0.12); padding: 5px 12px; border-radius: 8px; border: 1px solid rgba(6,182,212,0.3);">⚡ Back to AI Dashboard</a>
       </div>
     </div>
-    <div style="font-size: 0.85rem; color: #cbd5e1;">
-      User: <strong>admin</strong> | <a href="http://localhost:8501" style="color: #60a5fa; text-decoration: none; font-weight: 600;">⚡ Back to AI Dashboard</a>
+
+    <div class="nav-bar">
+      <a href="/">Dashboard</a>
+      {% if pipeline_name %}
+        <span>&gt;</span> <a href="/job/{{ pipeline_name }}">{{ pipeline_name }}</a>
+      {% endif %}
+      {% if build_number %}
+        <span>&gt;</span> <span>#{{ build_number }}</span>
+      {% endif %}
+    </div>
+
+    <div class="main-layout">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="/">📋 All Pipelines</a></li>
+          {% if pipeline_name %}
+            <li><a href="/job/{{ pipeline_name }}/build" style="color: #4ade80;">▶ Build Now</a></li>
+            <li><a href="/job/{{ pipeline_name }}/lastBuild/console">💻 Console Output</a></li>
+            <li><a href="/job/{{ pipeline_name }}/lastBuild">🔍 Last Build Info</a></li>
+          {% endif %}
+          <li><a href="http://localhost:8501" style="color: #38bdf8;">🤖 AI Self-Healing Center</a></li>
+        </ul>
+      </div>
+
+      <div class="content">
+        {{ body_content | safe }}
+      </div>
     </div>
   </div>
 
-  <div class="nav-bar">
-    <a href="/">Dashboard</a>
-    {% if pipeline_name %}
-      <span>&gt;</span> <a href="/job/{{ pipeline_name }}">{{ pipeline_name }}</a>
-    {% endif %}
-    {% if build_number %}
-      <span>&gt;</span> <span>#{{ build_number }}</span>
-    {% endif %}
-  </div>
-
-  <div class="main-layout">
-    <div class="sidebar">
-      <ul class="sidebar-menu">
-        <li><a href="/">📋 All Pipelines</a></li>
-        {% if pipeline_name %}
-          <li><a href="/job/{{ pipeline_name }}/build" style="color: #16a34a;">▶ Build Now</a></li>
-          <li><a href="/job/{{ pipeline_name }}/lastBuild/console">💻 Console Output</a></li>
-          <li><a href="/job/{{ pipeline_name }}/lastBuild">🔍 Last Build Info</a></li>
-        {% endif %}
-        <li><a href="http://localhost:8501">🤖 AI Self-Healing Center</a></li>
-      </ul>
-    </div>
-
-    <div class="content">
-      {{ body_content | safe }}
-    </div>
-  </div>
+  <script>
+    document.addEventListener('mousemove', (e) => {
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+    });
+  </script>
 </body>
 </html>
 """
@@ -139,21 +219,23 @@ def home():
     for name, info in PIPELINES.items():
         jobs_html += f"""
         <tr>
-          <td><span style="font-size: 1.2rem;">🔴</span></td>
-          <td><a href="/job/{name}" style="color: #2563eb; font-weight: 600; text-decoration: none;">{name}</a></td>
+          <td><span style="font-size: 1.1rem;">🔴</span></td>
+          <td><a href="/job/{name}" style="color: #38bdf8; font-weight: 700; font-family: 'JetBrains Mono'; text-decoration: none;">{name}</a></td>
           <td>{info['description']}</td>
           <td><span class="badge badge-FAILURE">Build #5 Failed</span></td>
           <td>
-            <a href="/job/{name}/build" class="btn" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">Build Now</a>
-            <a href="/job/{name}/lastBuild/console" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.75rem;">Console</a>
+            <div style="display: flex; gap: 8px;">
+              <a href="/job/{name}/build" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.76rem;">▶ Build Now</a>
+              <a href="/job/{name}/lastBuild/console" class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.76rem;">💻 Console</a>
+            </div>
           </td>
         </tr>
         """
 
     content = f"""
     <div class="card">
-      <h2 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Pipeline Dashboard</h2>
-      <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.2rem;">Monitored Jenkins pipelines managed by the Autonomous AI Agent.</p>
+      <h2 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: #fff;">Pipeline Dashboard</h2>
+      <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 1.2rem;">Monitored Jenkins pipelines managed by the Autonomous AI Agent.</p>
       <table>
         <thead>
           <tr>
@@ -184,20 +266,20 @@ def job_view(pipeline_name):
         status = "FAILURE" if i >= 4 else ("SUCCESS" if i == 3 else "FAILURE")
         builds_rows += f"""
         <tr>
-          <td><a href="/job/{pipeline_name}/{i}" style="color: #2563eb; font-weight: 600;">#{i}</a></td>
+          <td><a href="/job/{pipeline_name}/{i}" style="color: #38bdf8; font-weight: 700; font-family: 'JetBrains Mono';">#{i}</a></td>
           <td><span class="badge badge-{status}">{status}</span></td>
           <td>{datetime.now().strftime("%Y-%m-%d %H:%M")}</td>
           <td>{(i*23)+12}s</td>
-          <td><a href="/job/{pipeline_name}/{i}/console" style="color: #2563eb;">View Console</a></td>
+          <td><a href="/job/{pipeline_name}/{i}/console" style="color: #38bdf8; font-weight: 600;">View Console</a></td>
         </tr>
         """
 
     content = f"""
     <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
         <div>
-          <h1 style="font-size: 1.4rem;">Pipeline: {pipeline_name}</h1>
-          <p style="color: #64748b; font-size: 0.88rem;">{info['description']}</p>
+          <h1 style="font-size: 1.4rem; font-weight: 700; color: #fff;">Pipeline: {pipeline_name}</h1>
+          <p style="color: #94a3b8; font-size: 0.88rem; margin-top: 4px;">{info['description']}</p>
         </div>
         <div style="display: flex; gap: 8px;">
           <a href="/job/{pipeline_name}/build" class="btn">▶ Trigger Build</a>
@@ -205,11 +287,11 @@ def job_view(pipeline_name):
         </div>
       </div>
 
-      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 0.9rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #1e40af;">
-        ⚡ <strong>Autonomous AI Remediation:</strong> Monitored by AI-Powered Jenkins Analyzer with automatic root cause detection and healing.
+      <div style="background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #a5b4fc;">
+        ⚡ <strong>Autonomous AI Remediation Active:</strong> Monitored by AI-Powered Jenkins Analyzer with automatic root cause detection and self-healing.
       </div>
 
-      <h3 style="font-size: 1.1rem; margin-bottom: 0.6rem;">Build History</h3>
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem;">Build History</h3>
       <table>
         <thead>
           <tr>
@@ -238,34 +320,34 @@ def build_view(pipeline_name, build_number=5):
 
     content = f"""
     <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
         <div>
-          <h1 style="font-size: 1.4rem;">{pipeline_name} # {build_number}</h1>
-          <div style="margin-top: 4px;">
+          <h1 style="font-size: 1.4rem; font-weight: 700; color: #fff;">{pipeline_name} #{build_number}</h1>
+          <div style="margin-top: 6px;">
             <span class="badge badge-FAILURE">FAILURE</span>
-            <span style="font-size: 0.85rem; color: #64748b; margin-left: 8px;">Duration: 74s · Completed {datetime.now().strftime("%H:%M:%S")}</span>
+            <span style="font-size: 0.85rem; color: #94a3b8; margin-left: 8px;">Duration: 74s · Completed {datetime.now().strftime("%H:%M:%S")}</span>
           </div>
         </div>
         <a href="/job/{pipeline_name}/{build_number}/console" class="btn">💻 View Console Output</a>
       </div>
 
-      <h3 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Pipeline Stages</h3>
-      <div style="display: flex; gap: 8px; margin-bottom: 1.5rem;">
-        <div style="flex: 1; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.8rem; border-radius: 6px; text-align: center;">
-          <div style="font-size: 0.75rem; color: #166534; font-weight: 700;">CHECKOUT</div>
-          <div style="font-weight: 700; color: #15803d;">SUCCESS</div>
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem;">Pipeline Stages</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
+        <div style="flex: 1; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); padding: 0.9rem; border-radius: 12px; text-align: center;">
+          <div style="font-size: 0.75rem; color: #86efac; font-weight: 700;">CHECKOUT</div>
+          <div style="font-weight: 700; color: #4ade80; margin-top: 2px;">SUCCESS</div>
         </div>
-        <div style="flex: 1; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.8rem; border-radius: 6px; text-align: center;">
-          <div style="font-size: 0.75rem; color: #166534; font-weight: 700;">BUILD</div>
-          <div style="font-weight: 700; color: #15803d;">SUCCESS</div>
+        <div style="flex: 1; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); padding: 0.9rem; border-radius: 12px; text-align: center;">
+          <div style="font-size: 0.75rem; color: #86efac; font-weight: 700;">BUILD</div>
+          <div style="font-weight: 700; color: #4ade80; margin-top: 2px;">SUCCESS</div>
         </div>
-        <div style="flex: 1; background: #fef2f2; border: 1px solid #fecaca; padding: 0.8rem; border-radius: 6px; text-align: center;">
-          <div style="font-size: 0.75rem; color: #991b1b; font-weight: 700;">TEST</div>
-          <div style="font-weight: 700; color: #b91c1c;">FAILED</div>
+        <div style="flex: 1; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); padding: 0.9rem; border-radius: 12px; text-align: center;">
+          <div style="font-size: 0.75rem; color: #fca5a5; font-weight: 700;">TEST</div>
+          <div style="font-weight: 700; color: #f87171; margin-top: 2px;">FAILED</div>
         </div>
-        <div style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.8rem; border-radius: 6px; text-align: center;">
-          <div style="font-size: 0.75rem; color: #64748b; font-weight: 700;">DEPLOY</div>
-          <div style="font-weight: 700; color: #64748b;">ABORTED</div>
+        <div style="flex: 1; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.9rem; border-radius: 12px; text-align: center;">
+          <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">DEPLOY</div>
+          <div style="font-weight: 700; color: #64748b; margin-top: 2px;">ABORTED</div>
         </div>
       </div>
     </div>
@@ -287,10 +369,10 @@ def console_view(pipeline_name, build_number=5):
 
     content = f"""
     <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
         <div>
-          <h1 style="font-size: 1.3rem;">Console Output: {pipeline_name} #{build_number}</h1>
-          <span class="badge badge-FAILURE">Finished: FAILURE</span>
+          <h1 style="font-size: 1.3rem; font-weight: 700; color: #fff;">Console Output: {pipeline_name} #{build_number}</h1>
+          <span class="badge badge-FAILURE" style="margin-top: 4px;">Finished: FAILURE</span>
         </div>
         <a href="/job/{pipeline_name}" class="btn btn-secondary">← Back to Pipeline</a>
       </div>
