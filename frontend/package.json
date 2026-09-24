@@ -1,0 +1,14 @@
+{
+  "name": "ai-jenkins-devops-frontend",
+  "version": "2.0.0",
+  "description": "Production-grade React 18 SPA for AI Jenkins Pipeline Analyzer & Self-Healing DevOps Agent",
+  "main": "dist/index.html",
+  "scripts": {
+    "start": "py -3.14 ../backend/api.py"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "chart.js": "^4.4.1"
+  }
+}
