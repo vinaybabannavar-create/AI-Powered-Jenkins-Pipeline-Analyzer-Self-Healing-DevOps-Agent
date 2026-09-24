@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 # Load .env file
 load_dotenv()
 
-from google import genai
-
-# Safe — reads from environment variable or .env file
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", ""))
+try:
+    api_key = os.environ.get("GEMINI_API_KEY") or "demo-key"
+    client = genai.Client(api_key=api_key)
+except Exception:
+    client = None
 # ── Regex patterns for all 6 required categories ─────────────────────────────
 PATTERNS = {
     "Flaky Test": [
@@ -63,6 +64,15 @@ def regex_classify(log):
 
 # ── Layer 2: Gemini LLM fallback ──────────────────────────────────────────────
 def llm_classify(log, pipeline_name="unknown"):
+    if not client:
+        return {
+            "type": "Unknown",
+            "category": "Unknown",
+            "reason": "Gemini API key not configured",
+            "fix": "Set GEMINI_API_KEY in environment or .env file",
+            "confidence": "Low",
+            "pipeline": pipeline_name
+        }
     prompt = f"""You are a DevOps AI agent analyzing Jenkins build logs.
 Classify this log into exactly one of these categories:
 - Flaky Test
