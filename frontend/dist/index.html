@@ -385,7 +385,18 @@
       display: flex; align-items: center; gap: 8px;
     }
 
-    /* Architecture Flow Visualizer with Matrix Zoom */
+    /* Global Scrollbar Suppression - Clean Single Page View */
+    ::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+      display: none;
+    }
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Architecture Flow Visualizer - Auto-Fit Single Page (No Scrollbars) */
     .arch-container {
       background: var(--bg-card); border-radius: 24px; border: 1px solid var(--border-glass);
       padding: 2.2rem; margin-bottom: 2rem; position: relative; overflow: hidden;
@@ -401,34 +412,35 @@
     }
     .zoom-btn:hover { background: var(--neon-indigo); }
     .arch-canvas-wrapper {
-      overflow: auto; padding: 3rem 1rem; min-height: 400px; display: flex; justify-content: center; align-items: center;
+      overflow: hidden; padding: 2rem 0.5rem; min-height: 280px; display: flex; justify-content: center; align-items: center; width: 100%;
     }
     .arch-canvas {
-      display: flex; align-items: center; gap: 24px; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; max-width: 100%;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       transform-origin: center center;
     }
     .arch-node {
       background: #090e1a; border: 1px solid rgba(99, 102, 241, 0.35); border-radius: 16px;
-      padding: 1.4rem 1.6rem; min-width: 220px; max-width: 250px; text-align: center;
+      padding: 1.2rem 0.75rem; flex: 1; min-width: 0; text-align: center;
       position: relative; cursor: pointer; transition: all 0.25s;
     }
     .arch-node:hover, .arch-node.active {
-      border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(6, 182, 212, 0.4);
-      transform: translateY(-5px); background: #0f172a;
+      border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+      transform: translateY(-4px); background: #0f172a;
     }
     .arch-node-num {
-      width: 28px; height: 28px; border-radius: 50%; background: var(--neon-indigo);
-      color: #fff; font-size: 0.78rem; font-weight: 700; display: inline-flex;
-      align-items: center; justify-content: center; margin-bottom: 0.6rem;
+      width: 26px; height: 26px; border-radius: 50%; background: var(--neon-indigo);
+      color: #fff; font-size: 0.75rem; font-weight: 700; display: inline-flex;
+      align-items: center; justify-content: center; margin-bottom: 0.5rem;
     }
-    .arch-node-title { font-size: 0.92rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
-    .arch-node-desc { font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; }
+    .arch-node-title { font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.35rem; }
+    .arch-node-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; }
     .arch-connector {
-      font-size: 1.6rem; color: var(--neon-indigo); animation: flowPulse 2s infinite ease-in-out;
+      font-size: 1.2rem; color: var(--neon-indigo); flex-shrink: 0; animation: flowPulse 2s infinite ease-in-out;
     }
     @keyframes flowPulse {
       0%, 100% { opacity: 0.4; transform: translateX(0); }
-      50% { opacity: 1; transform: translateX(6px); color: var(--neon-cyan); }
+      50% { opacity: 1; transform: translateX(4px); color: var(--neon-cyan); }
     }
 
     /* Web Terminal / CLI Console */
