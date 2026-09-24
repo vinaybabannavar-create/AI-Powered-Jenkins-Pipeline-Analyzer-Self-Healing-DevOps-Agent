@@ -34,7 +34,6 @@
       --accent-amber: #f59e0b;
       --accent-rose: #ef4444;
       --accent-purple: #8b5cf6;
-      --sidebar-width: 270px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -68,81 +67,102 @@
 
     .app-layout {
       display: flex;
+      flex-direction: column;
       min-height: 100vh;
       position: relative;
       z-index: 2;
+      width: 100%;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: var(--sidebar-width);
-      background: var(--bg-panel);
-      border-right: 1px solid var(--border-subtle);
-      position: fixed; top: 0; bottom: 0; left: 0;
-      display: flex; flex-direction: column; justify-content: space-between;
-      z-index: 40;
-    }
-    .sidebar-brand {
-      padding: 1.4rem 1.4rem;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex; align-items: center; gap: 12px;
-    }
-    .brand-icon {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem; box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
-    }
-    .brand-title { font-size: 1.05rem; font-weight: 700; color: #fff; line-height: 1.2; }
-    .brand-sub { font-size: 0.7rem; color: var(--accent-cyan); font-weight: 700; letter-spacing: 0.04em; }
-
-    .sidebar-nav {
-      padding: 1.2rem 0.8rem;
-      display: flex; flex-direction: column; gap: 6px;
-      flex: 1; overflow-y: auto;
-    }
-    .nav-label {
-      font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase;
-      letter-spacing: 0.12em; font-weight: 700; padding: 0.6rem 0.8rem 0.3rem;
-    }
-    .nav-item {
-      display: flex; align-items: center; gap: 12px; padding: 0.75rem 1rem;
-      border-radius: 10px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500;
-      cursor: pointer; border: 1px solid transparent; transition: all 0.2s ease; position: relative;
-    }
-    .nav-item:hover, .nav-item.active {
-      color: #fff; background: rgba(99, 102, 241, 0.12);
-      border-color: rgba(99, 102, 241, 0.35); box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
-    }
-    .nav-item.active::before {
-      content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px;
-      border-radius: 0 4px 4px 0; background: linear-gradient(180deg, var(--accent-cyan), var(--accent-indigo));
-      box-shadow: 0 0 12px var(--accent-cyan);
-    }
-
-    /* Main Container */
-    .main-wrapper {
-      margin-left: var(--sidebar-width);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      min-height: 100vh;
-    }
-    
-    .header {
-      height: 72px;
-      min-height: 72px;
-      background: rgba(11, 15, 25, 0.92);
+    /* Top Sticky Header */
+    .top-header {
+      background: rgba(11, 15, 25, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-subtle);
-      position: sticky; top: 0; z-index: 30;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      position: sticky; top: 0; z-index: 40;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
     }
-    
+    .header-top-row {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+    }
+    .brand-title { font-size: 1.1rem; font-weight: 800; color: #fff; line-height: 1.2; letter-spacing: -0.3px; }
+    .brand-sub { font-size: 0.7rem; color: var(--accent-cyan); font-weight: 700; letter-spacing: 0.04em; }
+
+    /* Horizontal Tab Bar Below Header */
+    .horizontal-nav-bar {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(8, 12, 22, 0.85);
+      overflow-x: auto;
+    }
+    .horizontal-nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.4rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.6rem 1.1rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .nav-tab:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .nav-tab.active {
+      color: #fff;
+      background: rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    }
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 20%;
+      right: 20%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo));
+      border-radius: 3px;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    /* Main Container */
     .content-area {
       padding: 2rem;
       max-width: 1440px;
@@ -190,25 +210,16 @@
       border-color: var(--accent-indigo) !important;
       box-shadow: 0 0 14px rgba(99, 102, 241, 0.35), inset 0 1px 4px rgba(0, 0, 0, 0.5) !important;
     }
-    select.form-input {
-      appearance: auto;
-      cursor: pointer;
-    }
-    select.form-input option {
-      background: #0b0f19 !important;
-      color: #f8fafc !important;
-      padding: 8px;
-    }
-    textarea.form-input {
-      resize: vertical;
-      line-height: 1.5;
-    }
+    select.form-input { appearance: auto; cursor: pointer; }
+    select.form-input option { background: #0b0f19 !important; color: #f8fafc !important; padding: 8px; }
+    textarea.form-input { resize: vertical; line-height: 1.5; }
 
     /* Buttons */
     .btn {
       display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.15rem;
       border-radius: 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
       border: 1px solid transparent; transition: all 0.2s ease; font-family: inherit;
+      white-space: nowrap;
     }
     .btn-primary {
       background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff;
@@ -254,7 +265,7 @@
     }
 
     /* KPI Grid */
-    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 1.8rem; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 1.8rem; }
     .kpi-card { padding: 1.3rem 1.1rem; text-align: center; }
     .kpi-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.4rem; }
     .kpi-val { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem; }
@@ -401,10 +412,7 @@
       .pipe-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 900px) {
-      .sidebar { width: 70px; }
-      .sidebar .brand-title, .sidebar .brand-sub, .sidebar .nav-item span.nav-text, .sidebar-footer, .nav-label { display: none; }
-      .main-wrapper { margin-left: 70px; }
-      .header { padding: 0 1rem; }
+      .header-top-row { padding: 0.8rem 1rem; }
       .content-area { padding: 1.2rem; }
     }
   </style>
@@ -630,78 +638,25 @@
 
       return (
         <div className="app-layout">
-          {/* Sidebar */}
-          <aside className="sidebar">
-            <div>
-              <div className="sidebar-brand">
+          {/* Top Sticky Header */}
+          <header className="top-header">
+            <div className="header-top-row">
+              <div className="brand-section" onClick={() => setCurrentView('overview')}>
                 <div className="brand-icon">🤖</div>
                 <div>
                   <div className="brand-title">DevOps AI</div>
                   <div className="brand-sub">Self-Healing Platform</div>
                 </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '16px', padding: '0.3rem 0.8rem', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '20px' }}>
+                  <div className="pulse-dot"></div>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--accent-emerald)', fontWeight: 700 }}>Agent Active</span>
+                </div>
               </div>
 
-              <nav className="sidebar-nav">
-                <div className="nav-label">Step-by-Step Pages</div>
-                <div className={`nav-item ${currentView === 'overview' ? 'active' : ''}`} onClick={() => setCurrentView('overview')}>
-                  <span>⚡</span> <span className="nav-text">Overview &amp; Health</span>
-                </div>
-                <div className={`nav-item ${currentView === 'how_it_works' ? 'active' : ''}`} onClick={() => setCurrentView('how_it_works')}>
-                  <span>🔮</span> <span className="nav-text">How It Works (Flow)</span>
-                </div>
-                <div className={`nav-item ${currentView === 'terminal' ? 'active' : ''}`} onClick={() => setCurrentView('terminal')}>
-                  <span>💻</span> <span className="nav-text">Interactive Web CLI</span>
-                </div>
-                <div className={`nav-item ${currentView === 'pipelines' ? 'active' : ''}`} onClick={() => setCurrentView('pipelines')}>
-                  <span>📡</span> <span className="nav-text">Live Pipelines</span>
-                </div>
-                <div className={`nav-item ${currentView === 'actions' ? 'active' : ''}`} onClick={() => setCurrentView('actions')}>
-                  <span>🛠</span> <span className="nav-text">Self-Healing Actions</span>
-                </div>
-                <div className={`nav-item ${currentView === 'analytics' ? 'active' : ''}`} onClick={() => setCurrentView('analytics')}>
-                  <span>📊</span> <span className="nav-text">Analytics &amp; MTTR</span>
-                </div>
-                <div className={`nav-item ${currentView === 'settings' ? 'active' : ''}`} onClick={() => setCurrentView('settings')}>
-                  <span>⚙️</span> <span className="nav-text">Connect Jenkins</span>
-                </div>
-
-                <div className="nav-label" style={{ marginTop: '1rem' }}>Autonomous Controls</div>
-                <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleRunAnalysis} disabled={isScanning}>
-                  <span>{isScanning ? '⏳ Scanning...' : '⚡ Run Analysis Now'}</span>
-                </button>
-              </nav>
-            </div>
-
-            <div className="sidebar-footer" style={{ padding: '1.2rem', borderTop: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>
-                <div className="pulse-dot"></div>
-                <span>Autonomous Agent Active</span>
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: '4px' }}>
-                Hack2Hire Problem 08 · T John Inst of Tech
-              </div>
-            </div>
-          </aside>
-
-          {/* Main Content Area */}
-          <div className="main-wrapper">
-            <header className="header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700 }}>
-                  {currentView === 'overview' && 'DevOps Intelligence Dashboard'}
-                  {currentView === 'how_it_works' && '🔮 Interactive Architecture & Autonomous Flow'}
-                  {currentView === 'terminal' && '💻 Web CLI & Log Inspector'}
-                  {currentView === 'pipelines' && '📡 Live Monitored Pipelines'}
-                  {currentView === 'actions' && '🛠 Autonomous Remediation Center'}
-                  {currentView === 'analytics' && '📊 Performance & MTTR Benchmarks'}
-                  {currentView === 'settings' && '⚙️ Enterprise Jenkins Settings'}
-                </div>
-                <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '20px', background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '0.35rem 0.8rem', borderRadius: '20px', background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' }}>
                   {settings.demo_mode ? '🟢 DEMO MODE' : '🌐 REAL JENKINS'}
                 </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <button className="btn btn-secondary" onClick={() => setCurrentView('settings')}>
                   <span>⚙️ Settings</span>
                 </button>
@@ -709,225 +664,66 @@
                   <span>{isScanning ? '⏳ Running...' : '⚡ Trigger AI Scan'}</span>
                 </button>
               </div>
-            </header>
+            </div>
 
-            <main className="content-area">
-              {/* PAGE 1: OVERVIEW */}
-              {currentView === 'overview' && (
-                <div>
-                  <div className="spotlight-card hero">
-                    <div className="spotlight-inner">
-                      <div className="hero-eyebrow">⚡ Hack2Hire 1.0 — Problem 08 — Autonomous Pipeline Remediation</div>
-                      <h1 className="hero-title">Production <span>Jenkins</span> Self-Healing Agent</h1>
-                      <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-                        Dual-Layer AI Classifier (Regex + Gemini 1.5 Flash) · Live GitHub PRs &amp; Jira Tickets · 69.8% MTTR Reduction
-                      </p>
-                    </div>
-                  </div>
+            {/* Horizontal Navigation Strip Below Header */}
+            <nav className="horizontal-nav-bar">
+              <div className="horizontal-nav-inner">
+                <button className={`nav-tab ${currentView === 'overview' ? 'active' : ''}`} onClick={() => setCurrentView('overview')}>
+                  <span>⚡</span> <span>Overview &amp; Health</span>
+                </button>
+                <button className={`nav-tab ${currentView === 'how_it_works' ? 'active' : ''}`} onClick={() => setCurrentView('how_it_works')}>
+                  <span>🔮</span> <span>How It Works (Flow)</span>
+                </button>
+                <button className={`nav-tab ${currentView === 'terminal' ? 'active' : ''}`} onClick={() => setCurrentView('terminal')}>
+                  <span>💻</span> <span>Interactive Web CLI</span>
+                </button>
+                <button className={`nav-tab ${currentView === 'pipelines' ? 'active' : ''}`} onClick={() => setCurrentView('pipelines')}>
+                  <span>📡</span> <span>Live Pipelines</span>
+                </button>
+                <button className={`nav-tab ${currentView === 'actions' ? 'active' : ''}`} onClick={() => setCurrentView('actions')}>
+                  <span>🛠</span> <span>Self-Healing Actions</span>
+                </button>
+                <button className={`nav-tab ${currentView === 'analytics' ? 'active' : ''}`} onClick={() => setCurrentView('analytics')}>
+                  <span>📊</span> <span>Analytics &amp; MTTR</span>
+                </button>
+                <button className={`nav-tab ${currentView === 'settings' ? 'active' : ''}`} onClick={() => setCurrentView('settings')}>
+                  <span>⚙️</span> <span>Connect Jenkins</span>
+                </button>
+              </div>
+            </nav>
+          </header>
 
-                  {/* 6 KPI Cards */}
-                  <div className="kpi-grid">
-                    <div className="spotlight-card kpi-card kpi-blue"><div className="spotlight-inner"><div className="kpi-label">Total Logs</div><div className="kpi-val">{analytics?.total_logs || 20}</div><div className="kpi-sub">Analyzed</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-purple"><div className="spotlight-inner"><div className="kpi-label">Regex Layer 1</div><div className="kpi-val">{analytics?.source_counts?.regex || 18}</div><div className="kpi-sub">Deterministic</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-cyan"><div className="spotlight-inner"><div className="kpi-label">Gemini LLM</div><div className="kpi-val">{analytics?.source_counts?.llm || 2}</div><div className="kpi-sub">Flash 1.5</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-slate"><div className="spotlight-inner"><div className="kpi-label">MTTR Before</div><div className="kpi-val">15.1</div><div className="kpi-sub">Minutes (Manual)</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-green"><div className="spotlight-inner"><div className="kpi-label">MTTR After</div><div className="kpi-val">4.6</div><div className="kpi-sub">↓ 69.8% Faster</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-amber"><div className="spotlight-inner"><div className="kpi-label">Time Saved</div><div className="kpi-val">10.5</div><div className="kpi-sub">Min / Issue Saved</div></div></div>
-                  </div>
-
-                  {/* 3 Live Pipelines */}
-                  <div style={{ marginBottom: '1.8rem' }}>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.8rem' }}>
-                      📡 Active Jenkins Pipelines
-                    </div>
-                    <div className="pipe-grid">
-                      {pipelines.map(p => (
-                        <div key={p.name} className={`spotlight-card pipe-card ${p.status}`}>
-                          <div className="spotlight-inner">
-                            <div className="pipe-top">
-                              <div className="pipe-name">{p.name.replace(/-/g, ' ')}</div>
-                              <span className={`pipe-badge badge-${p.status}`}>{p.status}</span>
-                            </div>
-                            <div className="pipe-issue">{p.failure_type || 'Healthy'}</div>
-                            <div className="pipe-meta">Build #{p.build} &nbsp;·&nbsp; {p.duration_sec}s &nbsp;·&nbsp; ✅ {p.tests_pass} &nbsp; ❌ {p.tests_fail}</div>
-                            <div className="pipe-action"><span>⚡</span><span>{p.action || 'Monitoring'}</span></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+          {/* Main Full-Width Content Area */}
+          <main className="content-area">
+            {/* PAGE 1: OVERVIEW */}
+            {currentView === 'overview' && (
+              <div>
+                <div className="spotlight-card hero">
+                  <div className="spotlight-inner">
+                    <div className="hero-eyebrow">⚡ Hack2Hire 1.0 — Problem 08 — Autonomous Pipeline Remediation</div>
+                    <h1 className="hero-title">Production <span>Jenkins</span> Self-Healing Agent</h1>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                      Dual-Layer AI Classifier (Regex + Gemini 1.5 Flash) · Live GitHub PRs &amp; Jira Tickets · 69.8% MTTR Reduction
+                    </p>
                   </div>
                 </div>
-              )}
 
-              {/* PAGE 2: HOW IT WORKS (FLOW VISUALIZER WITH ZOOM) */}
-              {currentView === 'how_it_works' && (
-                <div>
-                  <div className="arch-container">
-                    <div className="zoom-toolbar">
-                      <button className="zoom-btn" title="Zoom In" onClick={() => setArchZoom(z => Math.min(z + 0.15, 1.8))}>+</button>
-                      <button className="zoom-btn" title="Zoom Out" onClick={() => setArchZoom(z => Math.max(z - 0.15, 0.6))}>−</button>
-                      <button className="zoom-btn" title="Reset Zoom" style={{ width: 'auto', padding: '0 8px', fontSize: '0.72rem' }} onClick={() => setArchZoom(1.0)}>Reset</button>
-                    </div>
-
-                    <div style={{ marginBottom: '1rem' }}>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>Interactive 5-Step Autonomous Healing Architecture</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Click any node to inspect technical internals and execution logic. Use zoom controls at top right.</div>
-                    </div>
-
-                    <div className="arch-canvas-wrapper">
-                      <div className="arch-canvas" style={{ transform: `scale(${archZoom})` }}>
-                        
-                        {/* Step 1 */}
-                        <div className={`arch-node ${activeArchNode === 1 ? 'active' : ''}`} onClick={() => setActiveArchNode(1)}>
-                          <div className="arch-node-num">1</div>
-                          <div className="arch-node-title">Jenkins Ingestion</div>
-                          <div className="arch-node-desc">Polls REST API / Webhook for console logs &amp; JUnit XML</div>
-                        </div>
-
-                        <div className="arch-connector">➔</div>
-
-                        {/* Step 2 */}
-                        <div className={`arch-node ${activeArchNode === 2 ? 'active' : ''}`} onClick={() => setActiveArchNode(2)}>
-                          <div className="arch-node-num">2</div>
-                          <div className="arch-node-title">Layer 1: Regex</div>
-                          <div className="arch-node-desc">Deterministic fast pattern classifier (&lt;5ms execution)</div>
-                        </div>
-
-                        <div className="arch-connector">➔</div>
-
-                        {/* Step 3 */}
-                        <div className={`arch-node ${activeArchNode === 3 ? 'active' : ''}`} onClick={() => setActiveArchNode(3)}>
-                          <div className="arch-node-num">3</div>
-                          <div className="arch-node-title">Layer 2: Gemini LLM</div>
-                          <div className="arch-node-desc">Few-shot prompted Flash 1.5 for ambiguous anomalies</div>
-                        </div>
-
-                        <div className="arch-connector">➔</div>
-
-                        {/* Step 4 */}
-                        <div className={`arch-node ${activeArchNode === 4 ? 'active' : ''}`} onClick={() => setActiveArchNode(4)}>
-                          <div className="arch-node-num">4</div>
-                          <div className="arch-node-title">Healing Execution</div>
-                          <div className="arch-node-desc">Jenkins Retry / GitHub PR / Jira Ticket creation</div>
-                        </div>
-
-                        <div className="arch-connector">➔</div>
-
-                        {/* Step 5 */}
-                        <div className={`arch-node ${activeArchNode === 5 ? 'active' : ''}`} onClick={() => setActiveArchNode(5)}>
-                          <div className="arch-node-num">5</div>
-                          <div className="arch-node-title">Live Telemetry &amp; DB</div>
-                          <div className="arch-node-desc">Stores in SQLite/Postgres &amp; streams SSE events</div>
-                        </div>
-
-                      </div>
-                    </div>
-
-                    {/* Step Details Box */}
-                    <div style={{ marginTop: '1.5rem', padding: '1.4rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
-                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
-                        {activeArchNode === 1 && "Step 1: REST API Jenkins Ingestion"}
-                        {activeArchNode === 2 && "Step 2: Layer 1 Deterministic Regex Classification"}
-                        {activeArchNode === 3 && "Step 3: Layer 2 Gemini 1.5 Flash LLM Fallback"}
-                        {activeArchNode === 4 && "Step 4: Autonomous Self-Healing Remediation"}
-                        {activeArchNode === 5 && "Step 5: Relational Persistence & Real-time WebSockets/SSE"}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                        {activeArchNode === 1 && "The agent connects to Jenkins at /job/{name}/lastBuild/consoleText and /testReport/api/json via Basic Auth with encrypted API tokens. In Demo Mode, it reads from the local 20 labeled datasets."}
-                        {activeArchNode === 2 && "Scans for 6 failure categories (Flaky Test, Dependency Issue, Infrastructure Issue, Code Defect, Configuration Error, Timeout) in sub-millisecond time. Resolves 90% of failures instantly."}
-                        {activeArchNode === 3 && "When confidence is Low or pattern matching is inconclusive, the full console trace is sent to Google Gemini 1.5 Flash to reason over the root cause and generate structured remediation JSON."}
-                        {activeArchNode === 4 && "Directly triggers the fix: Auto-retries flaky tests with backoff via Jenkins API, opens GitHub Pull Requests for missing packages or syntax errors, files Atlassian Jira bugs, or alerts ops."}
-                        {activeArchNode === 5 && "Every event, failure analysis, and external URL is saved in SQLAlchemy database and broadcasted live to connected web clients via Server-Sent Events."}
-                      </div>
-                    </div>
-                  </div>
+                {/* 6 KPI Cards */}
+                <div className="kpi-grid">
+                  <div className="spotlight-card kpi-card kpi-blue"><div className="spotlight-inner"><div className="kpi-label">Total Logs</div><div className="kpi-val">{analytics?.total_logs || 20}</div><div className="kpi-sub">Analyzed</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-purple"><div className="spotlight-inner"><div className="kpi-label">Regex Layer 1</div><div className="kpi-val">{analytics?.source_counts?.regex || 18}</div><div className="kpi-sub">Deterministic</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-cyan"><div className="spotlight-inner"><div className="kpi-label">Gemini LLM</div><div className="kpi-val">{analytics?.source_counts?.llm || 2}</div><div className="kpi-sub">Flash 1.5</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-slate"><div className="spotlight-inner"><div className="kpi-label">MTTR Before</div><div className="kpi-val">15.1</div><div className="kpi-sub">Minutes (Manual)</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-green"><div className="spotlight-inner"><div className="kpi-label">MTTR After</div><div className="kpi-val">4.6</div><div className="kpi-sub">↓ 69.8% Faster</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-amber"><div className="spotlight-inner"><div className="kpi-label">Time Saved</div><div className="kpi-val">10.5</div><div className="kpi-sub">Min / Issue Saved</div></div></div>
                 </div>
-              )}
 
-              {/* PAGE 3: WEB CLI & LOG INSPECTOR */}
-              {currentView === 'terminal' && (
-                <div>
-                  <div className="terminal-container">
-                    <div className="terminal-topbar">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div className="term-dots">
-                          <div className="term-dot" style={{ background: '#ef4444' }}></div>
-                          <div className="term-dot" style={{ background: '#f59e0b' }}></div>
-                          <div className="term-dot" style={{ background: '#10b981' }}></div>
-                        </div>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>devops-ai-agent@production-cli</span>
-                      </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Interactive Web Shell</div>
-                    </div>
-
-                    <div className="terminal-output">
-                      {termLines.map((line, idx) => (
-                        <div key={idx}>{line}</div>
-                      ))}
-                    </div>
-
-                    <form className="term-input-row" onSubmit={handleTerminalSubmit}>
-                      <span className="term-prompt">devops@ai-agent:~$</span>
-                      <input className="term-input" type="text" placeholder="Type command (e.g. 'analyze all', 'analyze log1.txt', 'help')..." value={termInput} onChange={e => setTermInput(e.target.value)} />
-                      <button type="submit" className="btn btn-primary" style={{ padding: '0.35rem 0.9rem', fontSize: '0.75rem' }}>Send</button>
-                    </form>
-
-                    {/* Quick Command Chips */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '1rem', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Quick Chips:</span>
-                      <button className="btn-chip" onClick={() => { setTermInput("analyze all"); }}>analyze all</button>
-                      <button className="btn-chip" onClick={() => { setTermInput("analyze log4.txt"); }}>analyze log4.txt (Flaky)</button>
-                      <button className="btn-chip" onClick={() => { setTermInput("analyze log1.txt"); }}>analyze log1.txt (Dep)</button>
-                      <button className="btn-chip" onClick={() => { setTermInput("run agent"); }}>run agent</button>
-                      <button className="btn-chip" onClick={() => { setTermInput("clear"); }}>clear</button>
-                    </div>
+                {/* 3 Live Pipelines */}
+                <div style={{ marginBottom: '1.8rem' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.8rem' }}>
+                    📡 Active Jenkins Pipelines
                   </div>
-
-                  {/* Single Log Inspector */}
-                  <div className="spotlight-card" style={{ padding: '1.8rem' }}>
-                    <div className="spotlight-inner">
-                      <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.8rem' }}>📄 Raw Log File Inspector (All 20 Datasets)</div>
-                      <div style={{ display: 'flex', gap: '12px', marginBottom: '1.2rem', alignItems: 'center' }}>
-                        <select className="form-input" style={{ width: '250px' }} value={selectedLogFile} onChange={e => handleSelectLog(e.target.value)}>
-                          {sampleLogs.map(l => (
-                            <option key={l.filename} value={l.filename}>{l.filename} ({l.size} B)</option>
-                          ))}
-                        </select>
-                        <button className="btn btn-primary" onClick={handleAnalyzeSelectedLog}>⚡ Analyze This Log</button>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                        <div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px' }}>Raw Log Content:</div>
-                          <textarea className="form-input" style={{ width: '100%', height: '170px', fontFamily: 'JetBrains Mono', fontSize: '0.78rem' }} readOnly value={selectedLogContent}></textarea>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px' }}>AI Classification &amp; Remediation:</div>
-                          {logAnalysisResult ? (
-                            <div style={{ background: '#090d16', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '10px', padding: '1.1rem', fontSize: '0.82rem', height: '170px', overflowY: 'auto' }}>
-                              <div style={{ marginBottom: '4px' }}><strong>Type:</strong> <span style={{ color: 'var(--accent-cyan)' }}>{logAnalysisResult.type}</span></div>
-                              <div style={{ marginBottom: '4px' }}><strong>Category:</strong> {logAnalysisResult.category}</div>
-                              <div style={{ marginBottom: '4px' }}><strong>Confidence:</strong> <span style={{ color: 'var(--accent-emerald)' }}>{logAnalysisResult.confidence}</span></div>
-                              <div style={{ marginBottom: '4px' }}><strong>Source:</strong> {logAnalysisResult.source}</div>
-                              <div style={{ marginBottom: '4px' }}><strong>Reason:</strong> {logAnalysisResult.reason}</div>
-                              <div><strong>Recommended Fix:</strong> <span style={{ color: '#a5b4fc' }}>{logAnalysisResult.fix}</span></div>
-                            </div>
-                          ) : (
-                            <div style={{ background: '#090d16', border: '1px solid var(--border-subtle)', borderRadius: '10px', height: '170px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.82rem' }}>
-                              Click 'Analyze This Log' to view AI diagnosis.
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* PAGE 4: LIVE PIPELINES */}
-              {currentView === 'pipelines' && (
-                <div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>📡 Real-Time Jenkins Pipeline Telemetry</div>
                   <div className="pipe-grid">
                     {pipelines.map(p => (
                       <div key={p.name} className={`spotlight-card pipe-card ${p.status}`}>
@@ -936,197 +732,384 @@
                             <div className="pipe-name">{p.name.replace(/-/g, ' ')}</div>
                             <span className={`pipe-badge badge-${p.status}`}>{p.status}</span>
                           </div>
-                          <div className="pipe-issue">{p.failure_type || 'Healthy / Monitored'}</div>
+                          <div className="pipe-issue">{p.failure_type || 'Healthy'}</div>
                           <div className="pipe-meta">Build #{p.build} &nbsp;·&nbsp; {p.duration_sec}s &nbsp;·&nbsp; ✅ {p.tests_pass} &nbsp; ❌ {p.tests_fail}</div>
-                          
-                          {/* Stage Flow */}
-                          <div style={{ display: 'flex', gap: '4px', margin: '1rem 0' }}>
-                            <div style={{ flex: 1, height: '5px', background: 'var(--accent-emerald)', borderRadius: '3px' }} title="Checkout: SUCCESS"></div>
-                            <div style={{ flex: 1, height: '5px', background: 'var(--accent-emerald)', borderRadius: '3px' }} title="Build: SUCCESS"></div>
-                            <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : 'var(--accent-rose)', borderRadius: '3px' }} title="Test: FAILED"></div>
-                            <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : '#334155', borderRadius: '3px' }} title="Deploy: ABORTED"></div>
-                          </div>
-
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div className="pipe-action"><span>⚡</span><span>{p.action || 'Auto-healing active'}</span></div>
-                            <a href={`http://localhost:5000/job/${p.name}`} target="_blank" rel="noreferrer" className="ext-link" style={{ fontSize: '0.72rem' }}>
-                              Jenkins Job ↗
-                            </a>
-                          </div>
+                          <div className="pipe-action"><span>⚡</span><span>{p.action || 'Monitoring'}</span></div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* PAGE 5: SELF-HEALING ACTIONS */}
-              {currentView === 'actions' && (
-                <div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>🛠 Autonomous Remediation Center &amp; Proof Links</div>
-                  <div className="spotlight-card table-container">
-                    <div className="spotlight-inner">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Timestamp</th>
-                            <th>Pipeline</th>
-                            <th>Failure Type</th>
-                            <th>Autonomous Action</th>
-                            <th>Status</th>
-                            <th>Inspect / Proof</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {actions.map(a => (
-                            <tr key={a.id}>
-                              <td style={{ fontFamily: 'JetBrains Mono', color: 'var(--text-dim)', fontSize: '0.75rem' }}>{a.timestamp}</td>
-                              <td><strong style={{ color: '#fff' }}>{a.pipeline}</strong></td>
-                              <td>{a.action_type}</td>
-                              <td style={{ color: 'var(--accent-cyan)' }}>⚡ {a.description}</td>
-                              <td><span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '6px', background: 'rgba(16,185,129,0.15)', color: '#4ade80' }}>{a.status}</span></td>
-                              <td>
-                                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                                  <button className="btn btn-secondary" style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem' }} onClick={() => setSelectedActionModal(a)}>
-                                    🔍 Inspect
-                                  </button>
-                                  {a.external_url ? (
-                                    <a href={a.external_url} target="_blank" rel="noreferrer" className="ext-link">
-                                      🔗 Proof ↗
-                                    </a>
-                                  ) : null}
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+            {/* PAGE 2: HOW IT WORKS (FLOW VISUALIZER WITH ZOOM) */}
+            {currentView === 'how_it_works' && (
+              <div>
+                <div className="arch-container">
+                  <div className="zoom-toolbar">
+                    <button className="zoom-btn" title="Zoom In" onClick={() => setArchZoom(z => Math.min(z + 0.15, 1.8))}>+</button>
+                    <button className="zoom-btn" title="Zoom Out" onClick={() => setArchZoom(z => Math.max(z - 0.15, 0.6))}>−</button>
+                    <button className="zoom-btn" title="Reset Zoom" style={{ width: 'auto', padding: '0 8px', fontSize: '0.72rem' }} onClick={() => setArchZoom(1.0)}>Reset</button>
+                  </div>
+
+                  <div style={{ marginBottom: '1rem' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>Interactive 5-Step Autonomous Healing Architecture</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Click any node to inspect technical internals and execution logic. Use zoom controls at top right.</div>
+                  </div>
+
+                  <div className="arch-canvas-wrapper">
+                    <div className="arch-canvas" style={{ transform: `scale(${archZoom})` }}>
+                      
+                      {/* Step 1 */}
+                      <div className={`arch-node ${activeArchNode === 1 ? 'active' : ''}`} onClick={() => setActiveArchNode(1)}>
+                        <div className="arch-node-num">1</div>
+                        <div className="arch-node-title">Jenkins Ingestion</div>
+                        <div className="arch-node-desc">Polls REST API / Webhook for console logs &amp; JUnit XML</div>
+                      </div>
+
+                      <div className="arch-connector">➔</div>
+
+                      {/* Step 2 */}
+                      <div className={`arch-node ${activeArchNode === 2 ? 'active' : ''}`} onClick={() => setActiveArchNode(2)}>
+                        <div className="arch-node-num">2</div>
+                        <div className="arch-node-title">Layer 1: Regex</div>
+                        <div className="arch-node-desc">Deterministic fast pattern classifier (&lt;5ms execution)</div>
+                      </div>
+
+                      <div className="arch-connector">➔</div>
+
+                      {/* Step 3 */}
+                      <div className={`arch-node ${activeArchNode === 3 ? 'active' : ''}`} onClick={() => setActiveArchNode(3)}>
+                        <div className="arch-node-num">3</div>
+                        <div className="arch-node-title">Layer 2: Gemini LLM</div>
+                        <div className="arch-node-desc">Few-shot prompted Flash 1.5 for ambiguous anomalies</div>
+                      </div>
+
+                      <div className="arch-connector">➔</div>
+
+                      {/* Step 4 */}
+                      <div className={`arch-node ${activeArchNode === 4 ? 'active' : ''}`} onClick={() => setActiveArchNode(4)}>
+                        <div className="arch-node-num">4</div>
+                        <div className="arch-node-title">Healing Execution</div>
+                        <div className="arch-node-desc">Jenkins Retry / GitHub PR / Jira Ticket creation</div>
+                      </div>
+
+                      <div className="arch-connector">➔</div>
+
+                      {/* Step 5 */}
+                      <div className={`arch-node ${activeArchNode === 5 ? 'active' : ''}`} onClick={() => setActiveArchNode(5)}>
+                        <div className="arch-node-num">5</div>
+                        <div className="arch-node-title">Live Telemetry &amp; DB</div>
+                        <div className="arch-node-desc">Stores in SQLite/Postgres &amp; streams SSE events</div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* Step Details Box */}
+                  <div style={{ marginTop: '1.5rem', padding: '1.4rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
+                      {activeArchNode === 1 && "Step 1: REST API Jenkins Ingestion"}
+                      {activeArchNode === 2 && "Step 2: Layer 1 Deterministic Regex Classification"}
+                      {activeArchNode === 3 && "Step 3: Layer 2 Gemini 1.5 Flash LLM Fallback"}
+                      {activeArchNode === 4 && "Step 4: Autonomous Self-Healing Remediation"}
+                      {activeArchNode === 5 && "Step 5: Relational Persistence & Real-time WebSockets/SSE"}
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                      {activeArchNode === 1 && "The agent connects to Jenkins at /job/{name}/lastBuild/consoleText and /testReport/api/json via Basic Auth with encrypted API tokens. In Demo Mode, it reads from the local 20 labeled datasets."}
+                      {activeArchNode === 2 && "Scans for 6 failure categories (Flaky Test, Dependency Issue, Infrastructure Issue, Code Defect, Configuration Error, Timeout) in sub-millisecond time. Resolves 90% of failures instantly."}
+                      {activeArchNode === 3 && "When confidence is Low or pattern matching is inconclusive, the full console trace is sent to Google Gemini 1.5 Flash to reason over the root cause and generate structured remediation JSON."}
+                      {activeArchNode === 4 && "Directly triggers the fix: Auto-retries flaky tests with backoff via Jenkins API, opens GitHub Pull Requests for missing packages or syntax errors, files Atlassian Jira bugs, or alerts ops."}
+                      {activeArchNode === 5 && "Every event, failure analysis, and external URL is saved in SQLAlchemy database and broadcasted live to connected web clients via Server-Sent Events."}
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* PAGE 6: ANALYTICS & MTTR */}
-              {currentView === 'analytics' && (
-                <div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>📊 MTTR Reduction &amp; Anomaly Analytics</div>
-                  <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
-                    <div className="spotlight-card kpi-card kpi-slate"><div className="spotlight-inner"><div className="kpi-label">Manual MTTR</div><div className="kpi-val">15.1 m</div><div className="kpi-sub">Baseline</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-green"><div className="spotlight-inner"><div className="kpi-label">Agent MTTR</div><div className="kpi-val">4.6 m</div><div className="kpi-sub">↓ 69.8% Faster</div></div></div>
-                    <div className="spotlight-card kpi-card kpi-amber"><div className="spotlight-inner"><div className="kpi-label">Time Saved</div><div className="kpi-val">10.5 m</div><div className="kpi-sub">Per Incident</div></div></div>
+            {/* PAGE 3: WEB CLI & LOG INSPECTOR */}
+            {currentView === 'terminal' && (
+              <div>
+                <div className="terminal-container">
+                  <div className="terminal-topbar">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div className="term-dots">
+                        <div className="term-dot" style={{ background: '#ef4444' }}></div>
+                        <div className="term-dot" style={{ background: '#f59e0b' }}></div>
+                        <div className="term-dot" style={{ background: '#10b981' }}></div>
+                      </div>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>devops-ai-agent@production-cli</span>
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Interactive Web Shell</div>
                   </div>
 
-                  <div className="spotlight-card table-container">
-                    <div className="spotlight-inner">
-                      <div style={{ padding: '1.2rem', fontSize: '0.9rem', fontWeight: 700 }}>📋 Historical Analysis Records</div>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Timestamp</th>
-                            <th>Pipeline</th>
-                            <th>Failure Type</th>
-                            <th>Confidence</th>
-                            <th>Source</th>
-                            <th>Reason</th>
-                            <th>Fix Suggestion</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {history.slice(0, 15).map(h => (
-                            <tr key={h.id}>
-                              <td style={{ fontFamily: 'JetBrains Mono', color: 'var(--text-dim)', fontSize: '0.75rem' }}>{h.timestamp}</td>
-                              <td><strong style={{ color: '#fff' }}>{h.pipeline}</strong></td>
-                              <td>{h.type}</td>
-                              <td><span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '4px', background: 'rgba(16,185,129,0.15)', color: '#4ade80' }}>{h.confidence}</span></td>
-                              <td><span style={{ fontSize: '0.68rem', fontWeight: 600, padding: '0.2rem 0.5rem', borderRadius: '4px', background: 'rgba(96,165,250,0.1)', color: '#60a5fa' }}>{h.source.toUpperCase()}</span></td>
-                              <td style={{ color: 'var(--text-muted)' }}>{h.reason}</td>
-                              <td style={{ color: '#a5b4fc' }}>{h.fix}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                  <div className="terminal-output">
+                    {termLines.map((line, idx) => (
+                      <div key={idx}>{line}</div>
+                    ))}
+                  </div>
+
+                  <form className="term-input-row" onSubmit={handleTerminalSubmit}>
+                    <span className="term-prompt">devops@ai-agent:~$</span>
+                    <input className="term-input" type="text" placeholder="Type command (e.g. 'analyze all', 'analyze log1.txt', 'help')..." value={termInput} onChange={e => setTermInput(e.target.value)} />
+                    <button type="submit" className="btn btn-primary" style={{ padding: '0.35rem 0.9rem', fontSize: '0.75rem' }}>Send</button>
+                  </form>
+
+                  {/* Quick Command Chips */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '1rem', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Quick Chips:</span>
+                    <button className="btn-chip" onClick={() => { setTermInput("analyze all"); }}>analyze all</button>
+                    <button className="btn-chip" onClick={() => { setTermInput("analyze log4.txt"); }}>analyze log4.txt (Flaky)</button>
+                    <button className="btn-chip" onClick={() => { setTermInput("analyze log1.txt"); }}>analyze log1.txt (Dep)</button>
+                    <button className="btn-chip" onClick={() => { setTermInput("run agent"); }}>run agent</button>
+                    <button className="btn-chip" onClick={() => { setTermInput("clear"); }}>clear</button>
                   </div>
                 </div>
-              )}
 
-              {/* PAGE 7: SETTINGS */}
-              {currentView === 'settings' && (
-                <div>
-                  <div className="spotlight-card" style={{ padding: '2.2rem', maxWidth: '780px', margin: '0 auto' }}>
-                    <div className="spotlight-inner">
-                      <div style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>⚙️ Enterprise Jenkins &amp; Integration Settings</div>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Configure live Jenkins cluster, GitHub tokens for automated PRs, and Jira credentials with encrypted at-rest security.</div>
+                {/* Single Log Inspector */}
+                <div className="spotlight-card" style={{ padding: '1.8rem' }}>
+                  <div className="spotlight-inner">
+                    <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.8rem' }}>📄 Raw Log File Inspector (All 20 Datasets)</div>
+                    <div style={{ display: 'flex', gap: '12px', marginBottom: '1.2rem', alignItems: 'center' }}>
+                      <select className="form-input" style={{ width: '250px' }} value={selectedLogFile} onChange={e => handleSelectLog(e.target.value)}>
+                        {sampleLogs.map(l => (
+                          <option key={l.filename} value={l.filename}>{l.filename} ({l.size} B)</option>
+                        ))}
+                      </select>
+                      <button className="btn btn-primary" onClick={handleAnalyzeSelectedLog}>⚡ Analyze This Log</button>
+                    </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                          <div>
-                            <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>Demo Mode (Local Mock Jenkins)</div>
-                            <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>Switch off to connect to your live enterprise Jenkins cluster</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                      <div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px' }}>Raw Log Content:</div>
+                        <textarea className="form-input" style={{ width: '100%', height: '170px', fontFamily: 'JetBrains Mono', fontSize: '0.78rem' }} readOnly value={selectedLogContent}></textarea>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px' }}>AI Classification &amp; Remediation:</div>
+                        {logAnalysisResult ? (
+                          <div style={{ background: '#090d16', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '10px', padding: '1.1rem', fontSize: '0.82rem', height: '170px', overflowY: 'auto' }}>
+                            <div style={{ marginBottom: '4px' }}><strong>Type:</strong> <span style={{ color: 'var(--accent-cyan)' }}>{logAnalysisResult.type}</span></div>
+                            <div style={{ marginBottom: '4px' }}><strong>Category:</strong> {logAnalysisResult.category}</div>
+                            <div style={{ marginBottom: '4px' }}><strong>Confidence:</strong> <span style={{ color: 'var(--accent-emerald)' }}>{logAnalysisResult.confidence}</span></div>
+                            <div style={{ marginBottom: '4px' }}><strong>Source:</strong> {logAnalysisResult.source}</div>
+                            <div style={{ marginBottom: '4px' }}><strong>Reason:</strong> {logAnalysisResult.reason}</div>
+                            <div><strong>Recommended Fix:</strong> <span style={{ color: '#a5b4fc' }}>{logAnalysisResult.fix}</span></div>
                           </div>
-                          <input type="checkbox" checked={settings.demo_mode} onChange={e => setSettings({ ...settings, demo_mode: e.target.checked })} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
-                        </div>
-
-                        <div>
-                          <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins Base URL</label>
-                          <input className="form-input" type="text" value={settings.jenkins_url || ''} onChange={e => setSettings({ ...settings, jenkins_url: e.target.value })} placeholder="http://localhost:5000 or https://jenkins.company.com" style={{ width: '100%', marginTop: '4px' }} />
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                          <div>
-                            <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins Username</label>
-                            <input className="form-input" type="text" value={settings.jenkins_user || ''} onChange={e => setSettings({ ...settings, jenkins_user: e.target.value })} placeholder="admin" style={{ width: '100%', marginTop: '4px' }} />
-                          </div>
-                          <div>
-                            <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins API Token</label>
-                            <input className="form-input" type="password" value={settings.jenkins_token || ''} onChange={e => setSettings({ ...settings, jenkins_token: e.target.value })} placeholder="•••••••••••• (Encrypted at rest)" style={{ width: '100%', marginTop: '4px' }} />
-                          </div>
-                        </div>
-
-                        <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={async () => {
-                          setTestResult({ loading: true });
-                          try {
-                            const res = await fetch('/api/settings/test-jenkins', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ jenkins_url: settings.jenkins_url, jenkins_user: settings.jenkins_user, jenkins_token: settings.jenkins_token, demo_mode: settings.demo_mode })
-                            });
-                            setTestResult(await res.json());
-                          } catch (e) {
-                            setTestResult({ success: false, message: "Network connection error" });
-                          }
-                        }}>
-                          <span>📡 Test Jenkins Connection</span>
-                        </button>
-
-                        {testResult && (
-                          <div style={{ padding: '0.8rem 1rem', borderRadius: '8px', background: testResult.success ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', border: `1px solid ${testResult.success ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`, fontSize: '0.8rem' }}>
-                            <strong>{testResult.success ? '✅ Connected: ' : '❌ Connection Failed: '}</strong> {testResult.message}
+                        ) : (
+                          <div style={{ background: '#090d16', border: '1px solid var(--border-subtle)', borderRadius: '10px', height: '170px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.82rem' }}>
+                            Click 'Analyze This Log' to view AI diagnosis.
                           </div>
                         )}
-
-                        <hr style={{ borderColor: 'var(--border-subtle)' }} />
-
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '1rem' }}>
-                          <button className="btn btn-primary" onClick={async () => {
-                            await fetch('/api/settings', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify(settings)
-                            });
-                            alert("Settings updated and credentials encrypted successfully!");
-                            loadAll();
-                          }}>Save &amp; Encrypt Settings</button>
-                        </div>
-
                       </div>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-            </main>
-          </div>
+            {/* PAGE 4: LIVE PIPELINES */}
+            {currentView === 'pipelines' && (
+              <div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>📡 Real-Time Jenkins Pipeline Telemetry</div>
+                <div className="pipe-grid">
+                  {pipelines.map(p => (
+                    <div key={p.name} className={`spotlight-card pipe-card ${p.status}`}>
+                      <div className="spotlight-inner">
+                        <div className="pipe-top">
+                          <div className="pipe-name">{p.name.replace(/-/g, ' ')}</div>
+                          <span className={`pipe-badge badge-${p.status}`}>{p.status}</span>
+                        </div>
+                        <div className="pipe-issue">{p.failure_type || 'Healthy / Monitored'}</div>
+                        <div className="pipe-meta">Build #{p.build} &nbsp;·&nbsp; {p.duration_sec}s &nbsp;·&nbsp; ✅ {p.tests_pass} &nbsp; ❌ {p.tests_fail}</div>
+                        
+                        {/* Stage Flow */}
+                        <div style={{ display: 'flex', gap: '4px', margin: '1rem 0' }}>
+                          <div style={{ flex: 1, height: '5px', background: 'var(--accent-emerald)', borderRadius: '3px' }} title="Checkout: SUCCESS"></div>
+                          <div style={{ flex: 1, height: '5px', background: 'var(--accent-emerald)', borderRadius: '3px' }} title="Build: SUCCESS"></div>
+                          <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : 'var(--accent-rose)', borderRadius: '3px' }} title="Test: FAILED"></div>
+                          <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : '#334155', borderRadius: '3px' }} title="Deploy: ABORTED"></div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div className="pipe-action"><span>⚡</span><span>{p.action || 'Auto-healing active'}</span></div>
+                          <a href={`http://localhost:5000/job/${p.name}`} target="_blank" rel="noreferrer" className="ext-link" style={{ fontSize: '0.72rem' }}>
+                            Jenkins Job ↗
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* PAGE 5: SELF-HEALING ACTIONS */}
+            {currentView === 'actions' && (
+              <div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>🛠 Autonomous Remediation Center &amp; Proof Links</div>
+                <div className="spotlight-card table-container">
+                  <div className="spotlight-inner">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>Pipeline</th>
+                          <th>Failure Type</th>
+                          <th>Autonomous Action</th>
+                          <th>Status</th>
+                          <th>Inspect / Proof</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {actions.map(a => (
+                          <tr key={a.id}>
+                            <td style={{ fontFamily: 'JetBrains Mono', color: 'var(--text-dim)', fontSize: '0.75rem' }}>{a.timestamp}</td>
+                            <td><strong style={{ color: '#fff' }}>{a.pipeline}</strong></td>
+                            <td>{a.action_type}</td>
+                            <td style={{ color: 'var(--accent-cyan)' }}>⚡ {a.description}</td>
+                            <td><span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '6px', background: 'rgba(16,185,129,0.15)', color: '#4ade80' }}>{a.status}</span></td>
+                            <td>
+                              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                <button className="btn btn-secondary" style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem' }} onClick={() => setSelectedActionModal(a)}>
+                                  🔍 Inspect
+                                </button>
+                                {a.external_url ? (
+                                  <a href={a.external_url} target="_blank" rel="noreferrer" className="ext-link">
+                                    🔗 Proof ↗
+                                  </a>
+                                ) : null}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* PAGE 6: ANALYTICS & MTTR */}
+            {currentView === 'analytics' && (
+              <div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>📊 MTTR Reduction &amp; Anomaly Analytics</div>
+                <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
+                  <div className="spotlight-card kpi-card kpi-slate"><div className="spotlight-inner"><div className="kpi-label">Manual MTTR</div><div className="kpi-val">15.1 m</div><div className="kpi-sub">Baseline</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-green"><div className="spotlight-inner"><div className="kpi-label">Agent MTTR</div><div className="kpi-val">4.6 m</div><div className="kpi-sub">↓ 69.8% Faster</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-amber"><div className="spotlight-inner"><div className="kpi-label">Time Saved</div><div className="kpi-val">10.5 m</div><div className="kpi-sub">Per Incident</div></div></div>
+                </div>
+
+                <div className="spotlight-card table-container">
+                  <div className="spotlight-inner">
+                    <div style={{ padding: '1.2rem', fontSize: '0.9rem', fontWeight: 700 }}>📋 Historical Analysis Records</div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>Pipeline</th>
+                          <th>Failure Type</th>
+                          <th>Confidence</th>
+                          <th>Source</th>
+                          <th>Reason</th>
+                          <th>Fix Suggestion</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {history.slice(0, 15).map(h => (
+                          <tr key={h.id}>
+                            <td style={{ fontFamily: 'JetBrains Mono', color: 'var(--text-dim)', fontSize: '0.75rem' }}>{h.timestamp}</td>
+                            <td><strong style={{ color: '#fff' }}>{h.pipeline}</strong></td>
+                            <td>{h.type}</td>
+                            <td><span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '4px', background: 'rgba(16,185,129,0.15)', color: '#4ade80' }}>{h.confidence}</span></td>
+                            <td><span style={{ fontSize: '0.68rem', fontWeight: 600, padding: '0.2rem 0.5rem', borderRadius: '4px', background: 'rgba(96,165,250,0.1)', color: '#60a5fa' }}>{h.source.toUpperCase()}</span></td>
+                            <td style={{ color: 'var(--text-muted)' }}>{h.reason}</td>
+                            <td style={{ color: '#a5b4fc' }}>{h.fix}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* PAGE 7: SETTINGS */}
+            {currentView === 'settings' && (
+              <div>
+                <div className="spotlight-card" style={{ padding: '2.2rem', maxWidth: '780px', margin: '0 auto' }}>
+                  <div className="spotlight-inner">
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>⚙️ Enterprise Jenkins &amp; Integration Settings</div>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Configure live Jenkins cluster, GitHub tokens for automated PRs, and Jira credentials with encrypted at-rest security.</div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>Demo Mode (Local Mock Jenkins)</div>
+                          <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>Switch off to connect to your live enterprise Jenkins cluster</div>
+                        </div>
+                        <input type="checkbox" checked={settings.demo_mode} onChange={e => setSettings({ ...settings, demo_mode: e.target.checked })} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                      </div>
+
+                      <div>
+                        <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins Base URL</label>
+                        <input className="form-input" type="text" value={settings.jenkins_url || ''} onChange={e => setSettings({ ...settings, jenkins_url: e.target.value })} placeholder="http://localhost:5000 or https://jenkins.company.com" style={{ width: '100%', marginTop: '4px' }} />
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins Username</label>
+                          <input className="form-input" type="text" value={settings.jenkins_user || ''} onChange={e => setSettings({ ...settings, jenkins_user: e.target.value })} placeholder="admin" style={{ width: '100%', marginTop: '4px' }} />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins API Token</label>
+                          <input className="form-input" type="password" value={settings.jenkins_token || ''} onChange={e => setSettings({ ...settings, jenkins_token: e.target.value })} placeholder="•••••••••••• (Encrypted at rest)" style={{ width: '100%', marginTop: '4px' }} />
+                        </div>
+                      </div>
+
+                      <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={async () => {
+                        setTestResult({ loading: true });
+                        try {
+                          const res = await fetch('/api/settings/test-jenkins', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jenkins_url: settings.jenkins_url, jenkins_user: settings.jenkins_user, jenkins_token: settings.jenkins_token, demo_mode: settings.demo_mode })
+                          });
+                          setTestResult(await res.json());
+                        } catch (e) {
+                          setTestResult({ success: false, message: "Network connection error" });
+                        }
+                      }}>
+                        <span>📡 Test Jenkins Connection</span>
+                      </button>
+
+                      {testResult && (
+                        <div style={{ padding: '0.8rem 1rem', borderRadius: '8px', background: testResult.success ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', border: `1px solid ${testResult.success ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`, fontSize: '0.8rem' }}>
+                          <strong>{testResult.success ? '✅ Connected: ' : '❌ Connection Failed: '}</strong> {testResult.message}
+                        </div>
+                      )}
+
+                      <hr style={{ borderColor: 'var(--border-subtle)' }} />
+
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '1rem' }}>
+                        <button className="btn btn-primary" onClick={async () => {
+                          await fetch('/api/settings', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(settings)
+                          });
+                          alert("Settings updated and credentials encrypted successfully!");
+                          loadAll();
+                        }}>Save &amp; Encrypt Settings</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </main>
 
           {/* Action Details Modal */}
           {selectedActionModal && (
