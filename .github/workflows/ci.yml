@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Install Dependencies
         run: |
@@ -29,11 +28,11 @@ jobs:
 
       - name: Run Pytest Test Suite
         env:
-          PYTHONPATH: backend
+          PYTHONPATH: backend:.
           GEMINI_API_KEY: "test-mock-key"
           JWT_SECRET_KEY: "ci-secret-key-test"
         run: |
-          pytest tests/ -v
+          python -m pytest tests/ -v
 
   docker-build:
     name: Build & Verify Docker Image
