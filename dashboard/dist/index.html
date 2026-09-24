@@ -19,10 +19,10 @@
   <style>
     :root {
       --bg-black: #000000;
-      --bg-surface: #05070f;
-      --bg-card: rgba(10, 15, 29, 0.75);
-      --bg-card-hover: rgba(18, 26, 48, 0.9);
-      --border-glass: rgba(255, 255, 255, 0.08);
+      --bg-surface: #000000;
+      --bg-card: #000000;
+      --bg-card-hover: #03050a;
+      --border-glass: rgba(255, 255, 255, 0.12);
       --border-glow-indigo: rgba(99, 102, 241, 0.5);
       --border-glow-cyan: rgba(6, 182, 212, 0.5);
       --border-glow-emerald: rgba(16, 185, 129, 0.5);
@@ -43,7 +43,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg-black);
+      background-color: #000000 !important;
       color: var(--text-main);
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
@@ -54,7 +54,7 @@
 
     /* Ambient Background Auroras & Glow */
     .aurora-container {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; background: #000000;
     }
     .aurora-orb {
       position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.18;
@@ -74,18 +74,19 @@
     .bg-grid {
       position: fixed; inset: 0; pointer-events: none; z-index: 1;
       background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
       background-size: 48px 48px;
     }
 
-    /* Ambient Interactive Spotlight */
+    /* Ambient Interactive Mouse Light Spotlight */
     #mouse-spotlight {
       position: fixed; inset: 0; pointer-events: none; z-index: 2;
       background: radial-gradient(
-        750px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh),
-        rgba(99, 102, 241, 0.1),
-        rgba(6, 182, 212, 0.04) 40%,
+        800px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh),
+        rgba(6, 182, 212, 0.18),
+        rgba(99, 102, 241, 0.12) 35%,
+        rgba(168, 85, 247, 0.05) 60%,
         transparent 80%
       );
     }
@@ -97,11 +98,12 @@
       display: flex;
       flex-direction: column;
       padding-bottom: 160px; /* Leave space for bottom floating dock */
+      background: #000000;
     }
 
     /* Top Header Bar */
     .top-header {
-      background: #030712;
+      background: #000000 !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
       position: sticky; top: 0; z-index: 100;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.95);
