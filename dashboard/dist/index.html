@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- React 18 & Babel & Chart.js -->
+  <!-- React 18, Babel, Chart.js -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -24,6 +24,7 @@
       --bg-card-hover: #162036;
       --border-subtle: rgba(255, 255, 255, 0.08);
       --border-highlight: rgba(99, 102, 241, 0.4);
+      --border-glow: rgba(6, 182, 212, 0.5);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
@@ -37,12 +38,14 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background-color: var(--bg-darkest);
       color: var(--text-main);
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      line-height: 1.5;
     }
 
     /* Ambient cursor spotlight glow */
@@ -50,7 +53,7 @@
       position: fixed; inset: 0; pointer-events: none; z-index: 1;
       background: radial-gradient(
         800px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh),
-        rgba(99, 102, 241, 0.08),
+        rgba(99, 102, 241, 0.09),
         rgba(6, 182, 212, 0.03) 40%,
         transparent 80%
       );
@@ -63,7 +66,12 @@
       background-size: 40px 40px;
     }
 
-    .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 2; }
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 2;
+    }
 
     /* Sidebar */
     .sidebar {
@@ -72,10 +80,11 @@
       border-right: 1px solid var(--border-subtle);
       position: fixed; top: 0; bottom: 0; left: 0;
       display: flex; flex-direction: column; justify-content: space-between;
-      z-index: 30;
+      z-index: 40;
     }
     .sidebar-brand {
-      padding: 1.5rem 1.4rem; border-bottom: 1px solid var(--border-subtle);
+      padding: 1.4rem 1.4rem;
+      border-bottom: 1px solid var(--border-subtle);
       display: flex; align-items: center; gap: 12px;
     }
     .brand-icon {
@@ -84,8 +93,18 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 1.3rem; box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
     }
-    .sidebar-nav { padding: 1.2rem 0.8rem; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
-    .nav-label { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; padding: 0.6rem 0.8rem 0.3rem; }
+    .brand-title { font-size: 1.05rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .brand-sub { font-size: 0.7rem; color: var(--accent-cyan); font-weight: 700; letter-spacing: 0.04em; }
+
+    .sidebar-nav {
+      padding: 1.2rem 0.8rem;
+      display: flex; flex-direction: column; gap: 6px;
+      flex: 1; overflow-y: auto;
+    }
+    .nav-label {
+      font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase;
+      letter-spacing: 0.12em; font-weight: 700; padding: 0.6rem 0.8rem 0.3rem;
+    }
     .nav-item {
       display: flex; align-items: center; gap: 12px; padding: 0.75rem 1rem;
       border-radius: 10px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500;
@@ -102,15 +121,37 @@
     }
 
     /* Main Container */
-    .main-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-width: 0; }
-    .header {
-      height: 72px; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 25;
-      display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
     }
-    .content-area { padding: 2rem; max-width: 1440px; width: 100%; margin: 0 auto; }
+    
+    .header {
+      height: 72px;
+      min-height: 72px;
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky; top: 0; z-index: 30;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .content-area {
+      padding: 2rem;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+    }
 
-    /* Interactive Spotlight Cards */
+    /* Spotlight Cards */
     .spotlight-card {
       position: relative; background: var(--bg-card); border-radius: 16px;
       border: 1px solid var(--border-subtle); overflow: hidden;
@@ -131,6 +172,37 @@
       transform: translateY(-2px);
     }
     .spotlight-inner { position: relative; z-index: 2; }
+
+    /* Form Controls & Inputs - Obsidian Theme */
+    .form-input {
+      background: #090d16 !important;
+      color: #f8fafc !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 10px !important;
+      padding: 0.65rem 0.9rem !important;
+      font-size: 0.85rem !important;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .form-input:focus {
+      border-color: var(--accent-indigo) !important;
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.35), inset 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+    }
+    select.form-input {
+      appearance: auto;
+      cursor: pointer;
+    }
+    select.form-input option {
+      background: #0b0f19 !important;
+      color: #f8fafc !important;
+      padding: 8px;
+    }
+    textarea.form-input {
+      resize: vertical;
+      line-height: 1.5;
+    }
 
     /* Buttons */
     .btn {
@@ -159,12 +231,12 @@
       cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all 0.2s;
     }
     .btn-chip:hover {
-      background: rgba(99, 102, 241, 0.15); color: #fff; border-color: var(--accent-indigo);
+      background: rgba(99, 102, 241, 0.18); color: #fff; border-color: var(--accent-indigo);
     }
 
     /* Hero */
     .hero {
-      padding: 2.2rem 2.6rem; margin-bottom: 1.5rem;
+      padding: 2.2rem 2.6rem; margin-bottom: 1.8rem;
       background: linear-gradient(135deg, #0b0f19 0%, #151b2e 50%, #0a0d16 100%);
       border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 20px;
     }
@@ -214,47 +286,47 @@
     /* Architecture Flow Visualizer with Zoom */
     .arch-container {
       background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-subtle);
-      padding: 1.8rem; margin-bottom: 1.8rem; position: relative; overflow: hidden;
+      padding: 2rem; margin-bottom: 1.8rem; position: relative; overflow: hidden;
     }
     .zoom-toolbar {
       position: absolute; top: 1.5rem; right: 1.5rem; display: flex; align-items: center; gap: 6px;
-      z-index: 10; background: rgba(0, 0, 0, 0.4); padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border-subtle);
+      z-index: 10; background: rgba(0, 0, 0, 0.6); padding: 4px 8px; border-radius: 10px; border: 1px solid var(--border-subtle);
     }
     .zoom-btn {
-      width: 30px; height: 30px; border-radius: 6px; background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-subtle); color: #fff; font-size: 1rem; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 6px; background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle); color: #fff; font-size: 1.1rem; cursor: pointer;
       display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
     .zoom-btn:hover { background: var(--accent-indigo); }
     .arch-canvas-wrapper {
-      overflow: auto; padding: 2rem 1rem; min-height: 380px; display: flex; justify-content: center; align-items: center;
+      overflow: auto; padding: 2.5rem 1rem; min-height: 380px; display: flex; justify-content: center; align-items: center;
     }
     .arch-canvas {
-      display: flex; align-items: center; gap: 24px; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; align-items: center; gap: 20px; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       transform-origin: center center;
     }
     .arch-node {
       background: #111827; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 14px;
-      padding: 1.2rem 1.4rem; min-width: 200px; max-width: 240px; text-align: center;
+      padding: 1.3rem 1.4rem; min-width: 210px; max-width: 240px; text-align: center;
       position: relative; cursor: pointer; transition: all 0.25s;
     }
     .arch-node:hover, .arch-node.active {
-      border-color: var(--accent-cyan); box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
-      transform: translateY(-4px);
+      border-color: var(--accent-cyan); box-shadow: 0 0 25px rgba(6, 182, 212, 0.35);
+      transform: translateY(-4px); background: #151e32;
     }
     .arch-node-num {
-      width: 24px; height: 24px; border-radius: 50%; background: var(--accent-indigo);
-      color: #fff; font-size: 0.72rem; font-weight: 700; display: inline-flex;
-      align-items: center; justify-content: center; margin-bottom: 0.5rem;
+      width: 26px; height: 26px; border-radius: 50%; background: var(--accent-indigo);
+      color: #fff; font-size: 0.75rem; font-weight: 700; display: inline-flex;
+      align-items: center; justify-content: center; margin-bottom: 0.6rem;
     }
-    .arch-node-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
-    .arch-node-desc { font-size: 0.7rem; color: var(--text-muted); line-height: 1.4; }
+    .arch-node-title { font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.35rem; }
+    .arch-node-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
     .arch-connector {
-      font-size: 1.4rem; color: var(--accent-indigo); animation: flowPulse 2s infinite ease-in-out;
+      font-size: 1.5rem; color: var(--accent-indigo); animation: flowPulse 2s infinite ease-in-out;
     }
     @keyframes flowPulse {
       0%, 100% { opacity: 0.4; transform: translateX(0); }
-      50% { opacity: 1; transform: translateX(4px); }
+      50% { opacity: 1; transform: translateX(5px); }
     }
 
     /* Web Terminal / CLI Console */
@@ -273,8 +345,8 @@
       max-height: 360px; overflow-y: auto; color: #e2e8f0; font-size: 0.82rem; line-height: 1.6;
       display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem;
     }
-    .term-input-row { display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.3); padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-subtle); }
-    .term-prompt { color: var(--accent-emerald); font-weight: 700; }
+    .term-input-row { display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.4); padding: 0.6rem 0.9rem; border-radius: 8px; border: 1px solid var(--border-subtle); }
+    .term-prompt { color: var(--accent-emerald); font-weight: 700; font-size: 0.85rem; }
     .term-input {
       background: transparent; border: none; color: #fff; font-family: inherit; font-size: 0.85rem;
       flex: 1; outline: none;
@@ -285,11 +357,11 @@
     table { width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left; }
     thead th {
       background: rgba(255, 255, 255, 0.02); color: var(--text-dim); font-size: 0.7rem;
-      text-transform: uppercase; letter-spacing: 0.08em; padding: 0.85rem 1.2rem;
+      text-transform: uppercase; letter-spacing: 0.08em; padding: 0.9rem 1.2rem;
       border-bottom: 1px solid var(--border-subtle); font-weight: 700;
     }
-    tbody td { padding: 0.85rem 1.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.04); color: #cbd5e1; }
-    tbody tr:hover { background: rgba(99, 102, 241, 0.05); }
+    tbody td { padding: 0.9rem 1.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.04); color: #cbd5e1; }
+    tbody tr:hover { background: rgba(99, 102, 241, 0.06); }
 
     .pulse-dot {
       width: 8px; height: 8px; border-radius: 50%; background: var(--accent-emerald);
@@ -314,8 +386,10 @@
     }
     @media (max-width: 900px) {
       .sidebar { width: 70px; }
-      .sidebar .brand-title, .sidebar .brand-sub, .sidebar .nav-item span, .sidebar-footer, .nav-label { display: none; }
+      .sidebar .brand-title, .sidebar .brand-sub, .sidebar .nav-item span.nav-text, .sidebar-footer, .nav-label { display: none; }
       .main-wrapper { margin-left: 70px; }
+      .header { padding: 0 1rem; }
+      .content-area { padding: 1.2rem; }
     }
   </style>
 </head>
@@ -341,7 +415,7 @@
     });
 
     function App() {
-      const [currentView, setCurrentView] = useState('overview'); // 'overview', 'how_it_works', 'terminal', 'pipelines', 'actions', 'analytics', 'settings'
+      const [currentView, setCurrentView] = useState('overview');
       const [pipelines, setPipelines] = useState([]);
       const [analytics, setAnalytics] = useState(null);
       const [actions, setActions] = useState([]);
@@ -356,7 +430,8 @@
 
       // Terminal State
       const [termLines, setTermLines] = useState([
-        "🤖 AI DevOps Agent Production Shell v2.0",
+        "🤖 DevOps AI Agent Production Shell v2.0",
+        "Autonomous Jenkins Pipeline Remediation Engine",
         "Type 'help' or click quick command chips below.",
         "---------------------------------------------------"
       ]);
@@ -366,6 +441,7 @@
       const [settings, setSettings] = useState({
         jenkins_url: "http://localhost:5000",
         jenkins_user: "admin",
+        jenkins_token: "",
         demo_mode: true,
         auto_heal_enabled: true,
         scan_interval_minutes: 5,
@@ -373,10 +449,7 @@
       });
       const [testResult, setTestResult] = useState(null);
 
-      const chartFailureRef = useRef(null);
-      const chartMttrRef = useRef(null);
-
-      // Fetch all state
+      // Load all backend data
       const loadAll = async () => {
         try {
           const [pRes, aRes, actRes, hRes, sRes, logsRes] = await Promise.all([
@@ -395,14 +468,19 @@
           if (sRes.ok) setSettings(await sRes.json());
           if (logsRes.ok) {
             const logsData = await logsRes.json();
-            setSampleLogs(logsData.files || []);
-            if (logsData.files && logsData.files.length > 0 && !selectedLogFile) {
-              setSelectedLogFile(logsData.files[0].filename);
-              setSelectedLogContent(logsData.files[0].content);
+            const files = logsData.files || [];
+            setSampleLogs(files);
+            if (files.length > 0) {
+              setSelectedLogFile(prev => {
+                const target = prev || files[0].filename;
+                const found = files.find(f => f.filename === target) || files[0];
+                setSelectedLogContent(found.content);
+                return found.filename;
+              });
             }
           }
         } catch (err) {
-          console.error(err);
+          console.error("Failed to load initial data:", err);
         }
       };
 
@@ -432,7 +510,7 @@
       // Run Native Analysis
       const handleRunAnalysis = async () => {
         setIsScanning(true);
-        setTermLines(prev => [...prev, `$ run agent`, `⏳ Executing AI Dual-Layer Analysis & Autonomous Healing...`]);
+        setTermLines(prev => [...prev, `$ run agent`, `⏳ Executing AI Dual-Layer Analysis & Autonomous Remediation...`]);
         try {
           const res = await fetch('/api/run-agent', { method: 'POST' });
           const data = await res.json();
@@ -529,7 +607,7 @@
             setLogAnalysisResult(data.result);
           }
         } catch (err) {
-          alert("Analysis failed");
+          alert("Analysis failed: " + err.message);
         }
       };
 
@@ -541,33 +619,33 @@
               <div className="sidebar-brand">
                 <div className="brand-icon">🤖</div>
                 <div>
-                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff' }}>DevOps AI</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--accent-cyan)', fontWeight: 700 }}>Self-Healing Platform</div>
+                  <div className="brand-title">DevOps AI</div>
+                  <div className="brand-sub">Self-Healing Platform</div>
                 </div>
               </div>
 
               <nav className="sidebar-nav">
                 <div className="nav-label">Step-by-Step Pages</div>
                 <div className={`nav-item ${currentView === 'overview' ? 'active' : ''}`} onClick={() => setCurrentView('overview')}>
-                  <span>⚡</span> Overview &amp; Health
+                  <span>⚡</span> <span className="nav-text">Overview &amp; Health</span>
                 </div>
                 <div className={`nav-item ${currentView === 'how_it_works' ? 'active' : ''}`} onClick={() => setCurrentView('how_it_works')}>
-                  <span>🔮</span> How It Works (Flow)
+                  <span>🔮</span> <span className="nav-text">How It Works (Flow)</span>
                 </div>
                 <div className={`nav-item ${currentView === 'terminal' ? 'active' : ''}`} onClick={() => setCurrentView('terminal')}>
-                  <span>💻</span> Interactive Web CLI
+                  <span>💻</span> <span className="nav-text">Interactive Web CLI</span>
                 </div>
                 <div className={`nav-item ${currentView === 'pipelines' ? 'active' : ''}`} onClick={() => setCurrentView('pipelines')}>
-                  <span>📡</span> Live Pipelines
+                  <span>📡</span> <span className="nav-text">Live Pipelines</span>
                 </div>
                 <div className={`nav-item ${currentView === 'actions' ? 'active' : ''}`} onClick={() => setCurrentView('actions')}>
-                  <span>🛠</span> Self-Healing Actions
+                  <span>🛠</span> <span className="nav-text">Self-Healing Actions</span>
                 </div>
                 <div className={`nav-item ${currentView === 'analytics' ? 'active' : ''}`} onClick={() => setCurrentView('analytics')}>
-                  <span>📊</span> Analytics &amp; MTTR
+                  <span>📊</span> <span className="nav-text">Analytics &amp; MTTR</span>
                 </div>
                 <div className={`nav-item ${currentView === 'settings' ? 'active' : ''}`} onClick={() => setCurrentView('settings')}>
-                  <span>⚙️</span> Connect Jenkins
+                  <span>⚙️</span> <span className="nav-text">Connect Jenkins</span>
                 </div>
 
                 <div className="nav-label" style={{ marginTop: '1rem' }}>Autonomous Controls</div>
@@ -577,7 +655,7 @@
               </nav>
             </div>
 
-            <div style={{ padding: '1.2rem', borderTop: '1px solid var(--border-subtle)' }}>
+            <div className="sidebar-footer" style={{ padding: '1.2rem', borderTop: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>
                 <div className="pulse-dot"></div>
                 <span>Autonomous Agent Active</span>
@@ -729,20 +807,20 @@
                     </div>
 
                     {/* Step Details Box */}
-                    <div style={{ marginTop: '1.5rem', padding: '1.2rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
+                    <div style={{ marginTop: '1.5rem', padding: '1.4rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '0.4rem' }}>
                         {activeArchNode === 1 && "Step 1: REST API Jenkins Ingestion"}
                         {activeArchNode === 2 && "Step 2: Layer 1 Deterministic Regex Classification"}
                         {activeArchNode === 3 && "Step 3: Layer 2 Gemini 1.5 Flash LLM Fallback"}
                         {activeArchNode === 4 && "Step 4: Autonomous Self-Healing Remediation"}
                         {activeArchNode === 5 && "Step 5: Relational Persistence & Real-time WebSockets/SSE"}
                       </div>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
                         {activeArchNode === 1 && "The agent connects to Jenkins at /job/{name}/lastBuild/consoleText and /testReport/api/json via Basic Auth with encrypted API tokens. In Demo Mode, it reads from the local 20 labeled datasets."}
                         {activeArchNode === 2 && "Scans for 6 failure categories (Flaky Test, Dependency Issue, Infrastructure Issue, Code Defect, Configuration Error, Timeout) in sub-millisecond time. Resolves 90% of failures instantly."}
                         {activeArchNode === 3 && "When confidence is Low or pattern matching is inconclusive, the full console trace is sent to Google Gemini 1.5 Flash to reason over the root cause and generate structured remediation JSON."}
                         {activeArchNode === 4 && "Directly triggers the fix: Auto-retries flaky tests with backoff via Jenkins API, opens GitHub Pull Requests for missing packages or syntax errors, files Atlassian Jira bugs, or alerts ops."}
-                        {activeArchNode === 5 && "Every event, failure analysis, and external URL is saved in SQLAlchemy database and broadcasted live to connected web clients."}
+                        {activeArchNode === 5 && "Every event, failure analysis, and external URL is saved in SQLAlchemy database and broadcasted live to connected web clients via Server-Sent Events."}
                       </div>
                     </div>
                   </div>
@@ -774,7 +852,7 @@
                     <form className="term-input-row" onSubmit={handleTerminalSubmit}>
                       <span className="term-prompt">devops@ai-agent:~$</span>
                       <input className="term-input" type="text" placeholder="Type command (e.g. 'analyze all', 'analyze log1.txt', 'help')..." value={termInput} onChange={e => setTermInput(e.target.value)} />
-                      <button type="submit" className="btn btn-primary" style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem' }}>Send</button>
+                      <button type="submit" className="btn btn-primary" style={{ padding: '0.35rem 0.9rem', fontSize: '0.75rem' }}>Send</button>
                     </form>
 
                     {/* Quick Command Chips */}
@@ -789,11 +867,11 @@
                   </div>
 
                   {/* Single Log Inspector */}
-                  <div className="spotlight-card" style={{ padding: '1.5rem' }}>
+                  <div className="spotlight-card" style={{ padding: '1.8rem' }}>
                     <div className="spotlight-inner">
-                      <div style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.8rem' }}>📄 Raw Log File Inspector (All 20 Datasets)</div>
-                      <div style={{ display: 'flex', gap: '12px', marginBottom: '1rem' }}>
-                        <select className="form-input" style={{ width: '220px' }} value={selectedLogFile} onChange={e => handleSelectLog(e.target.value)}>
+                      <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.8rem' }}>📄 Raw Log File Inspector (All 20 Datasets)</div>
+                      <div style={{ display: 'flex', gap: '12px', marginBottom: '1.2rem', alignItems: 'center' }}>
+                        <select className="form-input" style={{ width: '250px' }} value={selectedLogFile} onChange={e => handleSelectLog(e.target.value)}>
                           {sampleLogs.map(l => (
                             <option key={l.filename} value={l.filename}>{l.filename} ({l.size} B)</option>
                           ))}
@@ -801,23 +879,26 @@
                         <button className="btn btn-primary" onClick={handleAnalyzeSelectedLog}>⚡ Analyze This Log</button>
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                         <div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '4px' }}>Raw Log Content:</div>
-                          <textarea className="form-input" style={{ width: '100%', height: '140px', fontFamily: 'JetBrains Mono', fontSize: '0.75rem' }} readOnly value={selectedLogContent}></textarea>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px' }}>Raw Log Content:</div>
+                          <textarea className="form-input" style={{ width: '100%', height: '170px', fontFamily: 'JetBrains Mono', fontSize: '0.78rem' }} readOnly value={selectedLogContent}></textarea>
                         </div>
                         <div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '4px' }}>AI Classification &amp; Remediation:</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px' }}>AI Classification &amp; Remediation:</div>
                           {logAnalysisResult ? (
-                            <div style={{ background: '#090d16', border: '1px solid var(--border-subtle)', borderRadius: '10px', padding: '1rem', fontSize: '0.8rem' }}>
-                              <div><strong>Type:</strong> <span style={{ color: 'var(--accent-cyan)' }}>{logAnalysisResult.type}</span></div>
-                              <div><strong>Category:</strong> {logAnalysisResult.category}</div>
-                              <div><strong>Confidence:</strong> {logAnalysisResult.confidence}</div>
-                              <div><strong>Reason:</strong> {logAnalysisResult.reason}</div>
+                            <div style={{ background: '#090d16', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '10px', padding: '1.1rem', fontSize: '0.82rem', height: '170px', overflowY: 'auto' }}>
+                              <div style={{ marginBottom: '4px' }}><strong>Type:</strong> <span style={{ color: 'var(--accent-cyan)' }}>{logAnalysisResult.type}</span></div>
+                              <div style={{ marginBottom: '4px' }}><strong>Category:</strong> {logAnalysisResult.category}</div>
+                              <div style={{ marginBottom: '4px' }}><strong>Confidence:</strong> <span style={{ color: 'var(--accent-emerald)' }}>{logAnalysisResult.confidence}</span></div>
+                              <div style={{ marginBottom: '4px' }}><strong>Source:</strong> {logAnalysisResult.source}</div>
+                              <div style={{ marginBottom: '4px' }}><strong>Reason:</strong> {logAnalysisResult.reason}</div>
                               <div><strong>Recommended Fix:</strong> <span style={{ color: '#a5b4fc' }}>{logAnalysisResult.fix}</span></div>
                             </div>
                           ) : (
-                            <div style={{ color: 'var(--text-dim)', fontSize: '0.8rem', padding: '2rem', textAlign: 'center' }}>Click 'Analyze This Log' to view AI diagnosis.</div>
+                            <div style={{ background: '#090d16', border: '1px solid var(--border-subtle)', borderRadius: '10px', height: '170px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.82rem' }}>
+                              Click 'Analyze This Log' to view AI diagnosis.
+                            </div>
                           )}
                         </div>
                       </div>
@@ -829,7 +910,7 @@
               {/* PAGE 4: LIVE PIPELINES */}
               {currentView === 'pipelines' && (
                 <div>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>📡 Real-Time Jenkins Pipeline Telemetry</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>📡 Real-Time Jenkins Pipeline Telemetry</div>
                   <div className="pipe-grid">
                     {pipelines.map(p => (
                       <div key={p.name} className={`spotlight-card pipe-card ${p.status}`}>
@@ -842,11 +923,11 @@
                           <div className="pipe-meta">Build #{p.build} &nbsp;·&nbsp; {p.duration_sec}s &nbsp;·&nbsp; ✅ {p.tests_pass} &nbsp; ❌ {p.tests_fail}</div>
                           
                           {/* Stage Flow */}
-                          <div style={{ display: 'flex', gap: '4px', margin: '0.8rem 0' }}>
-                            <div style={{ flex: 1, height: '4px', background: 'var(--accent-emerald)', borderRadius: '2px' }} title="Checkout: SUCCESS"></div>
-                            <div style={{ flex: 1, height: '4px', background: 'var(--accent-emerald)', borderRadius: '2px' }} title="Build: SUCCESS"></div>
-                            <div style={{ flex: 1, height: '4px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : 'var(--accent-rose)', borderRadius: '2px' }} title="Test: FAILED"></div>
-                            <div style={{ flex: 1, height: '4px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : '#334155', borderRadius: '2px' }} title="Deploy: ABORTED"></div>
+                          <div style={{ display: 'flex', gap: '4px', margin: '1rem 0' }}>
+                            <div style={{ flex: 1, height: '5px', background: 'var(--accent-emerald)', borderRadius: '3px' }} title="Checkout: SUCCESS"></div>
+                            <div style={{ flex: 1, height: '5px', background: 'var(--accent-emerald)', borderRadius: '3px' }} title="Build: SUCCESS"></div>
+                            <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : 'var(--accent-rose)', borderRadius: '3px' }} title="Test: FAILED"></div>
+                            <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : '#334155', borderRadius: '3px' }} title="Deploy: ABORTED"></div>
                           </div>
 
                           <div className="pipe-action"><span>⚡</span><span>{p.action || 'Auto-healing active'}</span></div>
@@ -860,7 +941,7 @@
               {/* PAGE 5: SELF-HEALING ACTIONS */}
               {currentView === 'actions' && (
                 <div>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>🛠 Autonomous Remediation Center &amp; Proof Links</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>🛠 Autonomous Remediation Center &amp; Proof Links</div>
                   <div className="spotlight-card table-container">
                     <div className="spotlight-inner">
                       <table>
@@ -871,7 +952,7 @@
                             <th>Failure Type</th>
                             <th>Autonomous Action</th>
                             <th>Status</th>
-                            <th>Clickable Link</th>
+                            <th>Clickable Proof Link</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -901,7 +982,7 @@
               {/* PAGE 6: ANALYTICS & MTTR */}
               {currentView === 'analytics' && (
                 <div>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>📊 MTTR Reduction &amp; Anomaly Analytics</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.2rem' }}>📊 MTTR Reduction &amp; Anomaly Analytics</div>
                   <div className="kpi-grid" style={{ marginBottom: '1.5rem' }}>
                     <div className="spotlight-card kpi-card kpi-slate"><div className="spotlight-inner"><div className="kpi-label">Manual MTTR</div><div className="kpi-val">15.1 m</div><div className="kpi-sub">Baseline</div></div></div>
                     <div className="spotlight-card kpi-card kpi-green"><div className="spotlight-inner"><div className="kpi-label">Agent MTTR</div><div className="kpi-val">4.6 m</div><div className="kpi-sub">↓ 69.8% Faster</div></div></div>
@@ -910,7 +991,7 @@
 
                   <div className="spotlight-card table-container">
                     <div className="spotlight-inner">
-                      <div style={{ padding: '1rem', fontSize: '0.85rem', fontWeight: 700 }}>📋 Historical Analysis Records</div>
+                      <div style={{ padding: '1.2rem', fontSize: '0.9rem', fontWeight: 700 }}>📋 Historical Analysis Records</div>
                       <table>
                         <thead>
                           <tr>
@@ -945,16 +1026,16 @@
               {/* PAGE 7: SETTINGS */}
               {currentView === 'settings' && (
                 <div>
-                  <div className="spotlight-card" style={{ padding: '2rem', maxWidth: '780px', margin: '0 auto' }}>
+                  <div className="spotlight-card" style={{ padding: '2.2rem', maxWidth: '780px', margin: '0 auto' }}>
                     <div className="spotlight-inner">
                       <div style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>⚙️ Enterprise Jenkins &amp; Integration Settings</div>
                       <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Configure live Jenkins cluster, GitHub tokens for automated PRs, and Jira credentials with encrypted at-rest security.</div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.8rem 1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1.1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
                           <div>
-                            <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>Demo Mode (Local Mock Jenkins)</div>
-                            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>Switch off to connect to your live enterprise Jenkins cluster</div>
+                            <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>Demo Mode (Local Mock Jenkins)</div>
+                            <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>Switch off to connect to your live enterprise Jenkins cluster</div>
                           </div>
                           <input type="checkbox" checked={settings.demo_mode} onChange={e => setSettings({ ...settings, demo_mode: e.target.checked })} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
                         </div>
@@ -964,7 +1045,7 @@
                           <input className="form-input" type="text" value={settings.jenkins_url || ''} onChange={e => setSettings({ ...settings, jenkins_url: e.target.value })} placeholder="http://localhost:5000 or https://jenkins.company.com" style={{ width: '100%', marginTop: '4px' }} />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                           <div>
                             <label style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Jenkins Username</label>
                             <input className="form-input" type="text" value={settings.jenkins_user || ''} onChange={e => setSettings({ ...settings, jenkins_user: e.target.value })} placeholder="admin" style={{ width: '100%', marginTop: '4px' }} />
