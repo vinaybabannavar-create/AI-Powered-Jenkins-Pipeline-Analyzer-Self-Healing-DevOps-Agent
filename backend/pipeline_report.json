@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-22 23:15:33",
+  "timestamp": "2026-09-24 18:24:43",
   "total_pipelines": 3,
   "failed_pipelines": 3,
   "pipelines": [
@@ -7,7 +7,7 @@
       "pipeline": "python-flaky-tests",
       "build": 5,
       "result": "FAILURE",
-      "duration_sec": 96.6,
+      "duration_sec": 144.7,
       "tests_pass": 8,
       "tests_fail": 2,
       "type": "Flaky Test",
@@ -16,37 +16,37 @@
       "fix": "Auto-retry the flaky stage with exponential backoff",
       "source": "regex",
       "action": "Retrying failed stage with 30s backoff (attempt 1 of 3)",
-      "timestamp": "2026-04-22 23:15:21"
+      "timestamp": "2026-09-24 18:24:31"
     },
     {
       "pipeline": "docker-image-build",
       "build": 5,
       "result": "FAILURE",
-      "duration_sec": 135.5,
+      "duration_sec": 123.9,
       "tests_pass": 8,
       "tests_fail": 2,
       "type": "Configuration Error",
       "category": "Build Error",
-      "confidence": "Medium",
+      "confidence": "High",
       "fix": "Validate Jenkinsfile syntax and environment variables",
       "source": "regex",
       "action": "Suggested Jenkinsfile diff saved to config_suggestions.txt",
-      "timestamp": "2026-04-22 23:15:27"
+      "timestamp": "2026-09-24 18:24:37"
     },
     {
       "pipeline": "kubernetes-deploy",
       "build": 5,
       "result": "FAILURE",
-      "duration_sec": 74.9,
+      "duration_sec": 126.1,
       "tests_pass": 8,
       "tests_fail": 2,
-      "type": "Timeout",
+      "type": "Infrastructure Issue",
       "category": "Infrastructure",
-      "confidence": "High",
-      "fix": "Optimize slow stage or increase timeout threshold",
+      "confidence": "Medium",
+      "fix": "Check resource limits, scale up or free disk space",
       "source": "regex",
-      "action": "Restarting pipeline with increased timeout (2x current limit)",
-      "timestamp": "2026-04-22 23:15:33"
+      "action": "Alert sent to ops team \u2014 resource threshold breached",
+      "timestamp": "2026-09-24 18:24:43"
     }
   ]
 }

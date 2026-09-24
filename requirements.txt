@@ -1,6 +1,5 @@
-streamlit
-plotly
-pandas
-google-genai
 flask
 requests
+python-dotenv
+google-genai
+pandas

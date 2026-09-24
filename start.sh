@@ -17,9 +17,9 @@ sleep 7
 echo "--- 🤖 Running Jenkins Agent Analysis ---"
 python3 backend/jenkins_agent.py || echo "⚠️ Agent run had issues, but continuing to Dashboard..."
 
-# Start the Streamlit Dashboard
-echo "--- 📊 Starting Streamlit Dashboard on Port $PORT ---"
+# Start the Modern Dashboard Server
+echo "--- 📊 Starting Modern DevOps Dashboard on Port $PORT ---"
 PORT=${PORT:-8501}
 
-# Use python3 -m streamlit to ensure we use the correct environment
-python3 -m streamlit run dashboard/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+python3 dashboard/app.py --port $PORT --host 0.0.0.0
+

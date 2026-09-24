@@ -2,10 +2,14 @@ import re
 import os
 import json
 import time
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
 
 from google import genai
 
-# Safe — reads from environment variable only
+# Safe — reads from environment variable or .env file
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", ""))
 # ── Regex patterns for all 6 required categories ─────────────────────────────
 PATTERNS = {

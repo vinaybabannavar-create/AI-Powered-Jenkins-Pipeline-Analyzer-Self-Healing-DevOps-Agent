@@ -30,3 +30,36 @@ Fix      : Validate Jenkinsfile syntax and environment variables
 Pipeline : unknown
 Fix      : Validate Jenkinsfile syntax and environment variables
 ========================================
+Pipeline : unknown
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log13.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log5.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : unknown
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log13.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log5.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log13.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log5.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log13.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : log5.txt
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================
+Pipeline : unknown
+Fix      : Validate Jenkinsfile syntax and environment variables
+========================================

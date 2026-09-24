@@ -156,7 +156,7 @@ cd AI-Powered-Jenkins-Pipeline-Analyzer-Self-Healing-DevOps-Agent
 
 **2. Install dependencies**
 ```bash
-pip install streamlit plotly pandas google-genai flask requests
+pip install flask requests python-dotenv google-genai pandas plotly
 ```
 
 **3. Set your Gemini API key**
@@ -198,7 +198,7 @@ py -3.10 cli.py
 **7. Run Dashboard — Terminal 4**
 ```bash
 cd dashboard
-py -3.10 -m streamlit run app.py
+py -3.10 app.py
 ```
 > Open `http://localhost:8501` — auto-refreshes every 10 seconds.
 

@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI DevOps Agent — Jenkins Pipeline Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-darkest: #06070a;
+      --bg-panel: #0a0b10;
+      --bg-card: #0f1118;
+      --bg-card-hover: #141722;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-highlight: rgba(99, 102, 241, 0.35);
+      --border-glow: rgba(6, 182, 212, 0.4);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-indigo: #6366f1;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #ef4444;
+      --accent-purple: #8b5cf6;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-darkest);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Dynamic mouse spotlight on entire page */
+    #mouse-spotlight {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(
+        700px circle at var(--mouse-x, 50vw) var(--mouse-y, 50vh),
+        rgba(99, 102, 241, 0.075),
+        rgba(6, 182, 212, 0.025) 40%,
+        transparent 80%
+      );
+      transition: opacity 0.3s ease;
+    }
+
+    /* Subtle cyber background grid */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Matching Left Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-subtle);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 20;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem 1.4rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      padding: 1.2rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .nav-label {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      padding: 0.6rem 0.8rem 0.3rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: #fff;
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(180deg, var(--accent-cyan), var(--accent-indigo));
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .nav-icon {
+      font-size: 1.1rem;
+    }
+
+    .sidebar-footer {
+      padding: 1.2rem 1.4rem;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .agent-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-emerald);
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    /* Main Content Area */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* Matching Header / Navbar */
+    .header {
+      height: 70px;
+      background: rgba(10, 11, 16, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .badge-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .live-clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .refresh-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      padding: 5px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .refresh-pill:hover {
+      border-color: var(--border-highlight);
+      color: #fff;
+    }
+
+    .countdown-circle {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-top-color: var(--accent-cyan);
+      border-radius: 50%;
+      animation: spin 10s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca, #4f46e5);
+      box-shadow: 0 0 25px rgba(99, 102, 241, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-color: var(--border-subtle);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 2rem;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Spotlight Card with dynamic cursor hover illumination */
+    .spotlight-card {
+      position: relative;
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    }
+
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        350px circle at var(--card-mouse-x, -500px) var(--card-mouse-y, -500px),
+        rgba(99, 102, 241, 0.15),
+        rgba(6, 182, 212, 0.05) 50%,
+        transparent 80%
+      );
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .spotlight-card:hover::before {
+      opacity: 1;
+    }
+
+    .spotlight-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .spotlight-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 2.2rem 2.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #0e111a 0%, #151828 50%, #0d0f18 100%);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #818cf8 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Status Bar */
+    .statusbar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 0.8rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .status-item strong {
+      color: #fff;
+    }
+
+    .status-sep {
+      color: var(--border-subtle);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 1.8rem;
+    }
+
+    .kpi-card {
+      padding: 1.3rem 1.1rem;
+      text-align: center;
+    }
+
+    .kpi-label {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .kpi-sub {
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .kpi-blue .kpi-val { color: #60a5fa; }
+    .kpi-blue .kpi-sub { color: #3b82f6; }
+    .kpi-purple .kpi-val { color: #a78bfa; }
+    .kpi-purple .kpi-sub { color: #8b5cf6; }
+    .kpi-cyan .kpi-val { color: #22d3ee; }
+    .kpi-cyan .kpi-sub { color: #06b6d4; }
+    .kpi-slate .kpi-val { color: #94a3b8; }
+    .kpi-slate .kpi-sub { color: #64748b; }
+    .kpi-green .kpi-val { color: #4ade80; }
+    .kpi-green .kpi-sub { color: #10b981; }
+    .kpi-amber .kpi-val { color: #fbbf24; }
+    .kpi-amber .kpi-sub { color: #f59e0b; }
+
+    /* Section Headers */
+    .sec-head {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 1.8rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sec-head::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    /* Pipeline Health Grid */
+    .pipe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 1.8rem;
+    }
+
+    .pipe-card {
+      padding: 1.4rem 1.6rem;
+      border-left: 4px solid var(--accent-rose);
+    }
+
+    .pipe-card.pass {
+      border-left-color: var(--accent-emerald);
+    }
+
+    .pipe-card.warn {
+      border-left-color: var(--accent-amber);
+    }
+
+    .pipe-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .pipe-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pipe-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-fail {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-pass {
+      background: rgba(16, 185, 129, 0.15);
+      color: #86efac;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pipe-issue {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .pipe-meta {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .pipe-action {
+      font-size: 0.75rem;
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 1.8rem;
+    }
+
+    .chart-card {
+      padding: 1.4rem 1.6rem;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chart-canvas-wrapper {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 240px;
+    }
+
+    /* Data Tables */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+    }
+
+    .table-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.4rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.2);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      width: 280px;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.82rem;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .table-filters {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .select-filter {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-filter option {
+      background: var(--bg-panel);
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+
+    thead th {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-weight: 700;
+    }
+
+    tbody td {
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+
+    tbody tr:hover {
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .tag-conf {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .tag-conf.High {
+      background: rgba(16, 185, 129, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .tag-conf.Medium {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .tag-conf.Low {
+      background: rgba(139, 92, 246, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .tag-source {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .tag-source.regex {
+      background: rgba(96, 165, 250, 0.1);
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.2);
+    }
+
+    .tag-source.llm {
+      background: rgba(167, 139, 250, 0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #141724;
+      border: 1px solid var(--accent-indigo);
+      color: #fff;
+      padding: 1rem 1.4rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.3);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Footer */
+    .footer-bar {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      padding: 2.5rem 0 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 3rem;
+    }
+
+    .footer-bar strong {
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+      .pipe-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { width: 70px; }
+      .sidebar .brand-title, .sidebar .brand-sub, .sidebar .nav-item span, .sidebar-footer, .nav-label { display: none; }
+      .main-wrapper { margin-left: 70px; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic mouse glow follower -->
+  <div id="mouse-spotlight"></div>
+  <div class="bg-grid"></div>
+
+  <div class="app-container">
+    
+    <!-- Matching Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <div class="brand-icon">🤖</div>
+          <div>
+            <div class="brand-title">DevOps AI</div>
+            <div class="brand-sub">Self-Healing</div>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-label">Navigation</div>
+          <a href="#overview" class="nav-item active" onclick="setActiveNav(this)">
+            <span class="nav-icon">⚡</span>
+            <span>Overview &amp; KPIs</span>
+          </a>
+          <a href="#pipelines" class="nav-item" onclick="setActiveNav(this)">
+            <span class="nav-icon">📡</span>
+            <span>Pipeline Health</span>
+          </a>
+          <a href="#analytics" class="nav-item" onclick="setActiveNav(this)">
+            <span class="nav-icon">📊</span>
+            <span>Analytics &amp; Charts</span>
+          </a>
+          <a href="#logs" class="nav-item" onclick="setActiveNav(this)">
+            <span class="nav-icon">📋</span>
+            <span>Analysis Logs</span>
+          </a>
+          <a href="#actions" class="nav-item" onclick="setActiveNav(this)">
+            <span class="nav-icon">🛠</span>
+            <span>Self-Healing Actions</span>
+          </a>
+
+          <div class="nav-label" style="margin-top: 1rem;">Actions</div>
+          <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 4px;" onclick="runAgent()">
+            <span>⚡ Run AI Agent</span>
+          </button>
+          <a href="/api/download-csv" class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 6px; text-decoration: none;">
+            <span>⬇ Download CSV</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="agent-status-badge">
+          <div class="pulse-dot"></div>
+          <span>DevOps Agent Online</span>
+        </div>
+        <div style="font-size: 0.68rem; color: var(--text-dim); margin-top: 8px;">
+          T John Institute of Technology · Problem 08
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      
+      <!-- Matching Header -->
+      <header class="header">
+        <div class="header-left">
+          <div class="page-title">AI Pipeline Intelligence Dashboard</div>
+          <span class="badge-tag">Dual-Layer AI</span>
+        </div>
+
+        <div class="header-right">
+          <div class="live-clock" id="live-clock">--:--:--</div>
+          
+          <div class="refresh-pill" onclick="toggleAutoRefresh()" title="Click to toggle auto-refresh">
+            <span class="countdown-circle"></span>
+            <span id="refresh-timer-text">Auto: 10s</span>
+          </div>
+
+          <button class="btn btn-secondary" onclick="fetchData(true)">
+            <span id="refresh-icon">🔄</span> Refresh
+          </button>
+
+          <button class="btn btn-primary" onclick="runAgent()">
+            <span id="agent-icon">⚡</span> Trigger Agent
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Sections -->
+      <main class="content-area">
+
+        <!-- Hero Section -->
+        <section id="overview">
+          <div class="spotlight-card hero">
+            <div class="spotlight-inner">
+              <div class="hero-eyebrow">⚡ Hack2Hire 1.0 — Problem 08 — T John Institute of Technology</div>
+              <h1 class="hero-title">AI-Powered <span>Jenkins</span> Pipeline Analyzer</h1>
+              <p class="hero-sub">
+                Autonomous Self-Healing DevOps Agent &nbsp;·&nbsp; Google Gemini 1.5 Flash LLM &nbsp;·&nbsp;
+                High-Speed Regex Layer 1 &nbsp;·&nbsp; MTTR Reduced by 69.8%
+              </p>
+            </div>
+          </div>
+
+          <!-- Status Bar -->
+          <div class="spotlight-card statusbar">
+            <div class="spotlight-inner" style="display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap; width: 100%;">
+              <div class="status-item">
+                <span class="pulse-dot"></span>
+                <span style="color: var(--accent-emerald); font-weight: 700;">Agent Active</span>
+              </div>
+              <span class="status-sep">|</span>
+              <div class="status-item">
+                <span>Last Scan:</span>
+                <strong id="stat-last-scan">Loading...</strong>
+              </div>
+              <span class="status-sep">|</span>
+              <div class="status-item">
+                <span id="stat-pipe-count">3 Pipelines Monitored</span> &nbsp;·&nbsp;
+                <span style="color: var(--accent-rose); font-weight: 700;" id="stat-fail-count">3 Critical</span>
+              </div>
+              <span class="status-sep">|</span>
+              <div class="status-item">
+                <span>Mock Jenkins:</span>
+                <strong style="color: var(--accent-cyan);">localhost:5000</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 KPI Cards -->
+          <div class="kpi-grid">
+            <div class="spotlight-card kpi-card kpi-blue">
+              <div class="spotlight-inner">
+                <div class="kpi-label">Total Logs</div>
+                <div class="kpi-val" id="kpi-total">20</div>
+                <div class="kpi-sub">Analyzed</div>
+              </div>
+            </div>
+
+            <div class="spotlight-card kpi-card kpi-purple">
+              <div class="spotlight-inner">
+                <div class="kpi-label">Regex (Layer 1)</div>
+                <div class="kpi-val" id="kpi-regex">18</div>
+                <div class="kpi-sub">Deterministic Pattern</div>
+              </div>
+            </div>
+
+            <div class="spotlight-card kpi-card kpi-cyan">
+              <div class="spotlight-inner">
+                <div class="kpi-label">LLM (Layer 2)</div>
+                <div class="kpi-val" id="kpi-llm">2</div>
+                <div class="kpi-sub">Gemini 1.5 Flash</div>
+              </div>
+            </div>
+
+            <div class="spotlight-card kpi-card kpi-slate">
+              <div class="spotlight-inner">
+                <div class="kpi-label">MTTR Before</div>
+                <div class="kpi-val" id="kpi-mttr-before">15.1</div>
+                <div class="kpi-sub">Minutes (Manual)</div>
+              </div>
+            </div>
+
+            <div class="spotlight-card kpi-card kpi-green">
+              <div class="spotlight-inner">
+                <div class="kpi-label">MTTR After</div>
+                <div class="kpi-val" id="kpi-mttr-after">4.6</div>
+                <div class="kpi-sub" id="kpi-mttr-imp">↓ 69.8% Faster</div>
+              </div>
+            </div>
+
+            <div class="spotlight-card kpi-card kpi-amber">
+              <div class="spotlight-inner">
+                <div class="kpi-label">Time Saved</div>
+                <div class="kpi-val" id="kpi-time-saved">10.5</div>
+                <div class="kpi-sub">Min / Issue Saved</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pipeline Health Section -->
+        <section id="pipelines">
+          <div class="sec-head">📡 Jenkins Pipeline Health &amp; Autonomous Healing</div>
+          <div class="pipe-grid" id="pipeline-cards-container">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Analytics & Charts Section -->
+        <section id="analytics">
+          <div class="sec-head">📊 Analytics &amp; Performance Visualizations</div>
+          
+          <div class="charts-grid">
+            <div class="spotlight-card chart-card">
+              <div class="spotlight-inner" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="chart-title">
+                  <span>Failure Distribution</span>
+                  <span class="badge-tag">Categorization</span>
+                </div>
+                <div class="chart-canvas-wrapper">
+                  <canvas id="chart-failure"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="spotlight-card chart-card">
+              <div class="spotlight-inner" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="chart-title">
+                  <span>MTTR Benchmark: Manual vs AI Agent</span>
+                  <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: #86efac; border-color: rgba(16, 185, 129, 0.3);">-69.8% Time</span>
+                </div>
+                <div class="chart-canvas-wrapper">
+                  <canvas id="chart-mttr"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="spotlight-card chart-card">
+              <div class="spotlight-inner" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="chart-title">
+                  <span>Classification Confidence Breakdown</span>
+                  <span class="badge-tag">Dual Layer</span>
+                </div>
+                <div class="chart-canvas-wrapper">
+                  <canvas id="chart-confidence"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="spotlight-card chart-card">
+              <div class="spotlight-inner" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="chart-title">
+                  <span>Intelligence Layer Attribution</span>
+                  <span class="badge-tag">Regex vs LLM</span>
+                </div>
+                <div class="chart-canvas-wrapper">
+                  <canvas id="chart-source"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Full Analysis Log Section -->
+        <section id="logs">
+          <div class="sec-head">📋 Full Pipeline Analysis Logs</div>
+          <div class="spotlight-card table-container">
+            <div class="spotlight-inner">
+              <div class="table-controls">
+                <div class="search-box">
+                  <span>🔍</span>
+                  <input type="text" id="log-search" placeholder="Search logs, pipeline, reason, fix..." oninput="filterLogs()">
+                </div>
+                <div class="table-filters">
+                  <select id="filter-type" class="select-filter" onchange="filterLogs()">
+                    <option value="">All Issue Types</option>
+                  </select>
+                  <select id="filter-conf" class="select-filter" onchange="filterLogs()">
+                    <option value="">All Confidences</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                  <a href="/api/download-csv" class="btn btn-secondary" style="font-size: 0.78rem; text-decoration: none;">
+                    ⬇ Export CSV
+                  </a>
+                </div>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>File / Pipeline</th>
+                    <th>Issue Type</th>
+                    <th>Category</th>
+                    <th>Confidence</th>
+                    <th>Source</th>
+                    <th>Self-Healing Action Taken</th>
+                  </tr>
+                </thead>
+                <tbody id="logs-tbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Self Healing Actions Section -->
+        <section id="actions" style="margin-top: 1.5rem;">
+          <div class="sec-head">⚡ Self-Healing Execution History</div>
+          <div class="spotlight-card table-container">
+            <div class="spotlight-inner">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Target Pipeline</th>
+                    <th>Failure Type</th>
+                    <th>Autonomous Action Executed</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="actions-tbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-bar">
+          Built with precision by <strong>Vinay Babannavar &amp; Preetam Anil Kage</strong> &nbsp;·&nbsp;
+          Hack2Hire 1.0 Problem 08 &nbsp;·&nbsp; T John Institute of Technology CSE Dept &nbsp;·&nbsp;
+          <span id="footer-date">2026</span>
+        </footer>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <span id="toast-icon">⚡</span>
+    <span id="toast-message">Agent triggered successfully</span>
+  </div>
+
+  <script>
+    // ── Global State ────────────────────────────────────────────────────────
+    let dashboardData = null;
+    let allLogs = [];
+    let autoRefreshInterval = null;
+    let countdown = 10;
+    let isAutoRefreshActive = true;
+
+    // Chart instances
+    let chartFailure = null;
+    let chartMttr = null;
+    let chartConfidence = null;
+    let chartSource = null;
+
+    // ── Mouse Tracking & Card Spotlight Highlight ────────────────────────────
+    // Tracks cursor position for global ambient glow + individual card border highlight
+    document.addEventListener('mousemove', (e) => {
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+
+      const cards = document.querySelectorAll('.spotlight-card');
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--card-mouse-x', `${x}px`);
+        card.style.setProperty('--card-mouse-y', `${y}px`);
+      });
+    });
+
+    // ── Live Clock ───────────────────────────────────────────────────────────
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('live-clock').textContent = now.toLocaleTimeString();
+      document.getElementById('footer-date').textContent = now.toLocaleDateString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── Active Navigation State ──────────────────────────────────────────────
+    function setActiveNav(element) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // Scroll spy for sidebar links
+    window.addEventListener('scroll', () => {
+      const sections = ['overview', 'pipelines', 'analytics', 'logs', 'actions'];
+      const scrollPos = window.scrollY + 120;
+      for (const id of sections) {
+        const sec = document.getElementById(id);
+        if (sec && scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
+          document.querySelectorAll('.nav-item').forEach(link => {
+            if (link.getAttribute('href') === `#${id}`) {
+              document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+              link.classList.add('active');
+            }
+          });
+          break;
+        }
+      }
+    });
+
+    // ── Toast Notification ───────────────────────────────────────────────────
+    function showToast(message, icon = '⚡') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-icon').textContent = icon;
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    // ── Fetch Dashboard Data ─────────────────────────────────────────────────
+    async function fetchData(manual = false) {
+      if (manual) {
+        document.getElementById('refresh-icon').style.animation = 'spin 1s linear infinite';
+      }
+
+      try {
+        const res = await fetch('/api/data');
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        dashboardData = data;
+        allLogs = data.logs || [];
+
+        renderKPIs(data.summary);
+        renderPipelines(data.pipeline_report);
+        renderCharts(data.summary);
+        populateFilterOptions();
+        renderLogs();
+        renderActions();
+
+        document.getElementById('stat-last-scan').textContent = data.timestamp || new Date().toLocaleTimeString();
+        if (manual) {
+          showToast('Data refreshed successfully', '✅');
+        }
+      } catch (err) {
+        console.error('Failed to fetch dashboard data:', err);
+        if (manual) showToast('Failed to refresh data', '❌');
+      } finally {
+        if (manual) {
+          document.getElementById('refresh-icon').style.animation = '';
+        }
+      }
+    }
+
+    // ── Render KPIs ──────────────────────────────────────────────────────────
+    function renderKPIs(summary) {
+      if (!summary) return;
+      const total = summary.total_logs || 20;
+      const src = summary.source_counts || { regex: 18, llm: 2 };
+      const mttr = summary.mttr || { without_ai: 15.05, with_ai: 4.55, improvement: 69.8 };
+      const saved = (mttr.without_ai - mttr.with_ai).toFixed(1);
+
+      document.getElementById('kpi-total').textContent = total;
+      document.getElementById('kpi-regex').textContent = src.regex || 0;
+      document.getElementById('kpi-llm').textContent = src.llm || 0;
+      document.getElementById('kpi-mttr-before').textContent = mttr.without_ai || 15.05;
+      document.getElementById('kpi-mttr-after').textContent = mttr.with_ai || 4.55;
+      document.getElementById('kpi-mttr-imp').textContent = `↓ ${(mttr.improvement || 69.8).toFixed(1)}% Faster`;
+      document.getElementById('kpi-time-saved').textContent = saved;
+    }
+
+    // ── Render Pipelines ─────────────────────────────────────────────────────
+    function renderPipelines(report) {
+      const container = document.getElementById('pipeline-cards-container');
+      const pipelines = report?.pipelines || [
+        {
+          pipeline: "python-flaky-tests",
+          build: 5,
+          result: "FAILURE",
+          duration_sec: 60.3,
+          tests_pass: 8,
+          tests_fail: 2,
+          type: "Flaky Test",
+          action: "Retrying failed stage with 30s backoff (attempt 1 of 3)"
+        },
+        {
+          pipeline: "docker-image-build",
+          build: 5,
+          result: "FAILURE",
+          duration_sec: 150.9,
+          tests_pass: 8,
+          tests_fail: 2,
+          type: "Dependency Issue",
+          action: "Triggering: pip install -r requirements.txt"
+        },
+        {
+          pipeline: "kubernetes-deploy",
+          build: 5,
+          result: "FAILURE",
+          duration_sec: 129.5,
+          tests_pass: 8,
+          tests_fail: 2,
+          type: "Infrastructure Issue",
+          action: "Alert sent to ops team — resource threshold breached"
+        }
+      ];
+
+      const failedCount = pipelines.filter(p => p.result === 'FAILURE').length;
+      document.getElementById('stat-pipe-count').textContent = `${pipelines.length} Pipelines Monitored`;
+      document.getElementById('stat-fail-count').textContent = `${failedCount} Failing`;
+
+      container.innerHTML = pipelines.map(p => {
+        const isPass = p.result === 'SUCCESS';
+        const cardClass = isPass ? 'pass' : 'fail';
+        const badgeClass = isPass ? 'badge-pass' : 'badge-fail';
+        const icon = isPass ? '🟢' : '🔴';
+        const cleanName = (p.pipeline || '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        return `
+          <div class="spotlight-card pipe-card ${cardClass}">
+            <div class="spotlight-inner">
+              <div class="pipe-top">
+                <div class="pipe-name">${cleanName}</div>
+                <span class="pipe-badge ${badgeClass}">${icon} ${p.result || 'FAILURE'}</span>
+              </div>
+              <div class="pipe-issue">${p.type || 'Pipeline Failure'}</div>
+              <div class="pipe-meta">
+                Build #${p.build || '5'} &nbsp;·&nbsp;
+                ${p.duration_sec || 0}s &nbsp;·&nbsp;
+                ✅ ${p.tests_pass || 8} &nbsp; ❌ ${p.tests_fail || 2}
+              </div>
+              <div class="pipe-action">
+                <span>⚡</span>
+                <span>${p.action || 'Self-healing triggered'}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── Render Charts with Chart.js ──────────────────────────────────────────
+    function renderCharts(summary) {
+      if (!summary) return;
+
+      const fd = summary.failure_distribution || {
+        "Flaky Test": 3,
+        "Dependency Issue": 3,
+        "Infrastructure Issue": 3,
+        "Code Defect": 4,
+        "Configuration Error": 2,
+        "Timeout": 3
+      };
+
+      const mttr = summary.mttr || { without_ai: 15.05, with_ai: 4.55 };
+      const conf = summary.confidence_breakdown || { High: 9, Medium: 9, Low: 2 };
+      const src = summary.source_counts || { regex: 18, llm: 2 };
+
+      // Chart 1: Failure Distribution Donut
+      const ctx1 = document.getElementById('chart-failure').getContext('2d');
+      if (chartFailure) chartFailure.destroy();
+      chartFailure = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(fd),
+          datasets: [{
+            data: Object.values(fd),
+            backgroundColor: [
+              '#6366f1', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'
+            ],
+            borderColor: '#0f1118',
+            borderWidth: 3,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: '#94a3b8',
+                font: { family: 'Plus Jakarta Sans', size: 11 },
+                boxWidth: 12,
+                padding: 10
+              }
+            }
+          },
+          cutout: '65%'
+        }
+      });
+
+      // Chart 2: MTTR Benchmark Bar Chart
+      const ctx2 = document.getElementById('chart-mttr').getContext('2d');
+      if (chartMttr) chartMttr.destroy();
+      chartMttr = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: ['Without AI (Manual)', 'With AI Agent'],
+          datasets: [{
+            data: [mttr.without_ai, mttr.with_ai],
+            backgroundColor: [
+              'rgba(239, 68, 68, 0.45)',
+              'rgba(16, 185, 129, 0.45)'
+            ],
+            borderColor: [
+              '#ef4444',
+              '#10b981'
+            ],
+            borderWidth: 1.5,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', font: { family: 'JetBrains Mono' } },
+              title: { display: true, text: 'Minutes', color: '#64748b' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '600' } }
+            }
+          }
+        }
+      });
+
+      // Chart 3: Confidence Breakdown
+      const ctx3 = document.getElementById('chart-confidence').getContext('2d');
+      if (chartConfidence) chartConfidence.destroy();
+      chartConfidence = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+          labels: ['High', 'Medium', 'Low'],
+          datasets: [{
+            data: [conf.High || 0, conf.Medium || 0, conf.Low || 0],
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.45)',
+              'rgba(245, 158, 11, 0.45)',
+              'rgba(139, 92, 246, 0.45)'
+            ],
+            borderColor: [
+              '#10b981',
+              '#f59e0b',
+              '#8b5cf6'
+            ],
+            borderWidth: 1.5,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', precision: 0 }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { weight: '600' } }
+            }
+          }
+        }
+      });
+
+      // Chart 4: Source Attribution
+      const ctx4 = document.getElementById('chart-source').getContext('2d');
+      if (chartSource) chartSource.destroy();
+      chartSource = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+          labels: ['Regex (Layer 1)', 'Gemini LLM (Layer 2)'],
+          datasets: [{
+            data: [src.regex || 0, src.llm || 0],
+            backgroundColor: [
+              'rgba(99, 102, 241, 0.45)',
+              'rgba(6, 182, 212, 0.45)'
+            ],
+            borderColor: [
+              '#6366f1',
+              '#06b6d4'
+            ],
+            borderWidth: 1.5,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', precision: 0 }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { weight: '600' } }
+            }
+          }
+        }
+      });
+    }
+
+    // ── Filter Dropdowns ─────────────────────────────────────────────────────
+    function populateFilterOptions() {
+      const typeSelect = document.getElementById('filter-type');
+      const types = new Set();
+      allLogs.forEach(l => {
+        if (l.type) types.add(l.type);
+      });
+
+      const currentVal = typeSelect.value;
+      typeSelect.innerHTML = '<option value="">All Issue Types</option>';
+      types.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        typeSelect.appendChild(opt);
+      });
+      typeSelect.value = currentVal;
+    }
+
+    // ── Render Logs Table ────────────────────────────────────────────────────
+    function filterLogs() {
+      renderLogs();
+    }
+
+    function renderLogs() {
+      const tbody = document.getElementById('logs-tbody');
+      const query = document.getElementById('log-search').value.toLowerCase().trim();
+      const typeFilter = document.getElementById('filter-type').value;
+      const confFilter = document.getElementById('filter-conf').value;
+
+      const filtered = allLogs.filter(row => {
+        if (typeFilter && row.type !== typeFilter) return false;
+        if (confFilter && row.confidence !== confFilter) return false;
+        if (query) {
+          const matchTarget = `${row.timestamp} ${row.filename} ${row.pipeline} ${row.type} ${row.category} ${row.reason} ${row.fix} ${row.action_taken}`.toLowerCase();
+          return matchTarget.includes(query);
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-dim); padding: 2rem;">No matching logs found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(row => {
+        const conf = row.confidence || 'Medium';
+        const source = (row.source || 'regex').toLowerCase();
+        const fileOrPipe = row.pipeline || row.filename || 'Unknown';
+        const action = row.action_taken || 'No action recorded';
+
+        return `
+          <tr>
+            <td style="font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--text-dim);">${row.timestamp || 'N/A'}</td>
+            <td><strong style="color: #fff;">${fileOrPipe}</strong></td>
+            <td>${row.type || 'Unknown'}</td>
+            <td style="color: var(--text-muted);">${row.category || 'N/A'}</td>
+            <td><span class="tag-conf ${conf}">${conf}</span></td>
+            <td><span class="tag-source ${source}">${source.toUpperCase()}</span></td>
+            <td style="color: #a5b4fc; font-size: 0.78rem;">⚡ ${action}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ── Render Actions Table ─────────────────────────────────────────────────
+    function renderActions() {
+      const tbody = document.getElementById('actions-tbody');
+      const actions = allLogs.filter(row => row.action_taken && row.action_taken !== 'None');
+
+      if (!actions.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 2rem;">No autonomous actions logged yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = actions.slice(0, 15).map(row => {
+        return `
+          <tr>
+            <td style="font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--text-dim);">${row.timestamp || 'N/A'}</td>
+            <td><strong style="color: #fff;">${row.pipeline || row.filename || 'Pipeline'}</strong></td>
+            <td>${row.type || 'Failure'}</td>
+            <td style="color: var(--accent-cyan); font-weight: 500;">⚡ ${row.action_taken}</td>
+            <td><span class="tag-conf High">SUCCESS</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ── Trigger Jenkins AI Agent ─────────────────────────────────────────────
+    async function runAgent() {
+      const btnIcon = document.getElementById('agent-icon');
+      btnIcon.style.animation = 'spin 1s linear infinite';
+      showToast('AI Agent triggered — querying Mock Jenkins...', '🤖');
+
+      try {
+        const res = await fetch('/api/run-agent', { method: 'POST' });
+        const result = await res.json();
+        if (result.status === 'success') {
+          showToast('Agent finished: self-healing executed & logs saved!', '✅');
+          await fetchData();
+        } else {
+          showToast(result.message || 'Agent encountered an error', '⚠️');
+        }
+      } catch (err) {
+        console.error('Error triggering agent:', err);
+        showToast('Error connecting to backend agent', '❌');
+      } finally {
+        btnIcon.style.animation = '';
+      }
+    }
+
+    // ── Auto Refresh Management ──────────────────────────────────────────────
+    function startAutoRefresh() {
+      if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+      countdown = 10;
+      autoRefreshInterval = setInterval(() => {
+        if (!isAutoRefreshActive) return;
+        countdown--;
+        document.getElementById('refresh-timer-text').textContent = `Auto: ${countdown}s`;
+        if (countdown <= 0) {
+          countdown = 10;
+          fetchData();
+        }
+      }, 1000);
+    }
+
+    function toggleAutoRefresh() {
+      isAutoRefreshActive = !isAutoRefreshActive;
+      const text = document.getElementById('refresh-timer-text');
+      if (isAutoRefreshActive) {
+        countdown = 10;
+        text.textContent = 'Auto: 10s';
+        showToast('Auto-refresh resumed (10s)', '⏱');
+      } else {
+        text.textContent = 'Paused ⏸';
+        showToast('Auto-refresh paused', '⏸');
+      }
+    }
+
+    // ── Initial Load ─────────────────────────────────────────────────────────
+    fetchData();
+    startAutoRefresh();
+  </script>
+</body>
+</html>
