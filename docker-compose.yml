@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  devops-agent:
+    build: .
+    container_name: devops-ai-agent
+    ports:
+      - "8501:8501"
+      - "5000:5000"
+    environment:
+      - PORT=8501
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-devops-agent-prod-secret-2026}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - JIRA_API_TOKEN=${JIRA_API_TOKEN}
+      - JIRA_EMAIL=${JIRA_EMAIL}
+      - JIRA_URL=${JIRA_URL}
+    volumes:
+      - devops-data:/app/backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  devops-data:

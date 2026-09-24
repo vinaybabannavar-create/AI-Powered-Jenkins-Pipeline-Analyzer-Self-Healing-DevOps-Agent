@@ -240,7 +240,7 @@ def main():
     while True:
         print("\n")
         print("╔══════════════════════════════════════╗")
-        print("║     🤖  AI DevOps Agent               ║")
+        print("║     🤖  AI DevOps Agent              ║")
         print("║     Jenkins Pipeline Analyzer         ║")
         print("╠══════════════════════════════════════╣")
         print("║  1. Analyze all logs                  ║")
