@@ -380,6 +380,22 @@
     }
     .ext-link:hover { background: rgba(6, 182, 212, 0.2); text-decoration: underline; }
 
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
+      z-index: 100; padding: 1.5rem;
+    }
+    .modal-card {
+      background: #0b0f19; border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 18px;
+      max-width: 680px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 35px rgba(99,102,241,0.25);
+      overflow: hidden; animation: modalFadeIn 0.25s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     @media (max-width: 1200px) {
       .kpi-grid { grid-template-columns: repeat(3, 1fr); }
       .pipe-grid { grid-template-columns: 1fr; }
@@ -427,6 +443,7 @@
       const [isScanning, setIsScanning] = useState(false);
       const [archZoom, setArchZoom] = useState(1.0);
       const [activeArchNode, setActiveArchNode] = useState(1);
+      const [selectedActionModal, setSelectedActionModal] = useState(null);
 
       // Terminal State
       const [termLines, setTermLines] = useState([
@@ -930,7 +947,12 @@
                             <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--accent-emerald)' : '#334155', borderRadius: '3px' }} title="Deploy: ABORTED"></div>
                           </div>
 
-                          <div className="pipe-action"><span>⚡</span><span>{p.action || 'Auto-healing active'}</span></div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div className="pipe-action"><span>⚡</span><span>{p.action || 'Auto-healing active'}</span></div>
+                            <a href={`http://localhost:5000/job/${p.name}`} target="_blank" rel="noreferrer" className="ext-link" style={{ fontSize: '0.72rem' }}>
+                              Jenkins Job ↗
+                            </a>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -952,7 +974,7 @@
                             <th>Failure Type</th>
                             <th>Autonomous Action</th>
                             <th>Status</th>
-                            <th>Clickable Proof Link</th>
+                            <th>Inspect / Proof</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -964,11 +986,16 @@
                               <td style={{ color: 'var(--accent-cyan)' }}>⚡ {a.description}</td>
                               <td><span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '6px', background: 'rgba(16,185,129,0.15)', color: '#4ade80' }}>{a.status}</span></td>
                               <td>
-                                {a.external_url ? (
-                                  <a href={a.external_url} target="_blank" rel="noreferrer" className="ext-link">
-                                    🔗 Open Proof ↗
-                                  </a>
-                                ) : <span style={{ color: 'var(--text-dim)' }}>—</span>}
+                                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                  <button className="btn btn-secondary" style={{ padding: '0.25rem 0.6rem', fontSize: '0.72rem' }} onClick={() => setSelectedActionModal(a)}>
+                                    🔍 Inspect
+                                  </button>
+                                  {a.external_url ? (
+                                    <a href={a.external_url} target="_blank" rel="noreferrer" className="ext-link">
+                                      🔗 Proof ↗
+                                    </a>
+                                  ) : null}
+                                </div>
                               </td>
                             </tr>
                           ))}
@@ -1100,6 +1127,64 @@
 
             </main>
           </div>
+
+          {/* Action Details Modal */}
+          {selectedActionModal && (
+            <div className="modal-overlay" onClick={() => setSelectedActionModal(null)}>
+              <div className="modal-card" onClick={e => e.stopPropagation()}>
+                <div style={{ padding: '1.4rem 1.6rem', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '1.3rem' }}>🛠</span>
+                    <div>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff' }}>Remediation Action #{selectedActionModal.id}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>Target: {selectedActionModal.pipeline}</div>
+                    </div>
+                  </div>
+                  <button onClick={() => setSelectedActionModal(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', fontSize: '1.4rem', cursor: 'pointer' }}>✕</button>
+                </div>
+
+                <div style={{ padding: '1.6rem', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ background: '#090d16', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Failure Category</div>
+                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>{selectedActionModal.action_type}</div>
+                    </div>
+                    <div style={{ background: '#090d16', padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700 }}>Execution Status</div>
+                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#4ade80', marginTop: '2px' }}>✅ {selectedActionModal.status}</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>Remediation Description</div>
+                    <div style={{ background: '#090d16', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.5 }}>
+                      {selectedActionModal.description}
+                    </div>
+                  </div>
+
+                  {selectedActionModal.external_url && (
+                    <div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>Proof Target URL</div>
+                      <a href={selectedActionModal.external_url} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.3)', padding: '0.8rem 1rem', borderRadius: '8px', color: 'var(--accent-cyan)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600 }}>
+                        <span>🔗 {selectedActionModal.external_url}</span>
+                        <span>Open Proof ↗</span>
+                      </a>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '0.8rem' }}>
+                    <button className="btn btn-secondary" onClick={() => setSelectedActionModal(null)}>Close</button>
+                    {selectedActionModal.external_url && (
+                      <a href={selectedActionModal.external_url} target="_blank" rel="noreferrer" className="btn btn-primary">
+                        Open in New Tab ↗
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       );
     }

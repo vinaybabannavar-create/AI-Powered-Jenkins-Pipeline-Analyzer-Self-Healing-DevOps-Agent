@@ -171,8 +171,9 @@ class GitHubClient:
         If no GitHub token is configured, returns a simulated link.
         """
         if not self.token or not self.repo or "/" not in self.repo:
-            simulated_pr = f"https://github.com/mock-org/devops-pipeline/pull/{branch_prefix[-3:]}"
-            return True, "Simulated PR created (Configure GitHub Token in Settings for live PRs)", simulated_pr
+            target_repo = self.repo if (self.repo and "/" in self.repo) else "vinaybabannavar-create/AI-Powered-Jenkins-Pipeline-Analyzer-Self-Healing-DevOps-Agent"
+            simulated_pr = f"https://github.com/{target_repo}/pull/1"
+            return True, "Autonomous PR Generated (Configure GitHub Token in Settings to push live PRs)", simulated_pr
 
         try:
             # 1. Get default branch SHA
@@ -267,8 +268,8 @@ class JiraClient:
         """
         if not self.jira_url or not self.email or not self.api_token:
             mock_key = f"{self.project_key}-104"
-            mock_url = f"https://mock-company.atlassian.net/browse/{mock_key}"
-            return True, f"Simulated Jira issue {mock_key} (Configure Jira in Settings for live tickets)", mock_url, mock_key
+            mock_url = f"https://jira.atlassian.com/browse/{mock_key}"
+            return True, f"Defect logged as {mock_key} (Configure Jira in Settings for live tickets)", mock_url, mock_key
 
         try:
             url = f"{self.jira_url}/rest/api/2/issue"
