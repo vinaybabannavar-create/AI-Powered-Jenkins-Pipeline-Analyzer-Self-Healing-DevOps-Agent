@@ -46,12 +46,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: actions/setup-buildx-action@v3
-
-      - name: Build Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: false
-          tags: devops-ai-agent:latest
+      - name: Build Docker Container
+        run: |
+          docker build -t devops-ai-agent:latest .
