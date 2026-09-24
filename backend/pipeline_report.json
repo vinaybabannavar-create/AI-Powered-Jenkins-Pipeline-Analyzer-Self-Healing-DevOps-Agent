@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-24 18:24:43",
+  "timestamp": "2026-09-24 19:03:44",
   "total_pipelines": 3,
   "failed_pipelines": 3,
   "pipelines": [
@@ -7,7 +7,7 @@
       "pipeline": "python-flaky-tests",
       "build": 5,
       "result": "FAILURE",
-      "duration_sec": 144.7,
+      "duration_sec": 173.7,
       "tests_pass": 8,
       "tests_fail": 2,
       "type": "Flaky Test",
@@ -16,13 +16,13 @@
       "fix": "Auto-retry the flaky stage with exponential backoff",
       "source": "regex",
       "action": "Retrying failed stage with 30s backoff (attempt 1 of 3)",
-      "timestamp": "2026-09-24 18:24:31"
+      "timestamp": "2026-09-24 19:03:32"
     },
     {
       "pipeline": "docker-image-build",
       "build": 5,
       "result": "FAILURE",
-      "duration_sec": 123.9,
+      "duration_sec": 171.7,
       "tests_pass": 8,
       "tests_fail": 2,
       "type": "Configuration Error",
@@ -31,13 +31,13 @@
       "fix": "Validate Jenkinsfile syntax and environment variables",
       "source": "regex",
       "action": "Suggested Jenkinsfile diff saved to config_suggestions.txt",
-      "timestamp": "2026-09-24 18:24:37"
+      "timestamp": "2026-09-24 19:03:38"
     },
     {
       "pipeline": "kubernetes-deploy",
       "build": 5,
       "result": "FAILURE",
-      "duration_sec": 126.1,
+      "duration_sec": 120.1,
       "tests_pass": 8,
       "tests_fail": 2,
       "type": "Infrastructure Issue",
@@ -46,7 +46,7 @@
       "fix": "Check resource limits, scale up or free disk space",
       "source": "regex",
       "action": "Alert sent to ops team \u2014 resource threshold breached",
-      "timestamp": "2026-09-24 18:24:43"
+      "timestamp": "2026-09-24 19:03:44"
     }
   ]
 }
