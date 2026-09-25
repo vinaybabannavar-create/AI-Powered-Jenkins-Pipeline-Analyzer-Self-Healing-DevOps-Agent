@@ -25,7 +25,7 @@ At scale, across multiple pipelines and teams, this manual overhead becomes a si
 An AI agent that connects to Jenkins via REST API, automatically fetches pipeline logs, and classifies failures into one of **6 categories** using a two-layer intelligence system:
 
 - **Layer 1** — Fast regex pattern matching (no API call, instant)
-- **Layer 2** — Google Gemini 1.5 Flash LLM fallback (for ambiguous cases)
+- **Layer 2** — Google Gemini 3.5 Flash Lite LLM fallback (for ambiguous cases)
 
 Based on the classification, the agent immediately triggers the appropriate **self-healing action** without waiting for human input. All results are visualised in real time on a **Streamlit dashboard** that auto-refreshes every 10 seconds.
 
@@ -42,7 +42,7 @@ Based on the classification, the agent immediately triggers the appropriate **se
 - **Mock Jenkins REST API** — Flask server simulating real Jenkins at localhost:5000
 - **Jenkins Agent** — Fetches build info, console logs, test reports, and stage timings via REST API
 - **6 Failure Categories** — Flaky Test, Dependency Issue, Infrastructure Issue, Code Defect, Configuration Error, Timeout
-- **Dual Classification** — Regex Layer 1 + Gemini 1.5 Flash LLM Layer 2
+- **Dual Classification** — Regex Layer 1 + Gemini 3.5 Flash Lite LLM Layer 2
 - **Self-Healing Actions** — Auto-retry, pip install, Jira issue, Jenkinsfile diff, ops alert
 - **MTTR Reduction** — From 16 min → 5 min (**69.8% improvement**)
 - **Live Dashboard** — Pipeline health cards, failure charts, MTTR comparison, auto-refresh 10s
@@ -61,7 +61,7 @@ Fetches: build info · console logs · test reports · stage timings · JUnit XM
 ↓
 Regex Classifier — Layer 1 (Fast · 6 pattern categories)
 ↓ if Low confidence
-Gemini 1.5 Flash LLM — Layer 2 (Few-shot prompted)
+Gemini 3.5 Flash Lite LLM — Layer 2 (Few-shot prompted)
 ↓
 Self-Healing Action Layer
 ├── Flaky Test          →  Auto-retry 30s backoff
@@ -118,7 +118,7 @@ AI-Powered-Jenkins-Pipeline-Analyzer/
 | Layer | Technology |
 |---|---|
 | Language | Python 3.10 |
-| AI / LLM | Google Gemini 1.5 Flash |
+| AI / LLM | Google Gemini 3.5 Flash Lite |
 | Classification | Regex + Pattern Matching |
 | Mock Jenkins API | Flask |
 | Dashboard | Streamlit + Plotly |

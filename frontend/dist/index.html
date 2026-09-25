@@ -823,7 +823,7 @@
                     <div className="hero-eyebrow">⚡ Hack2Hire 1.0 — Problem 08 — Autonomous Pipeline Remediation</div>
                     <h1 className="hero-title">Production <span>Jenkins</span> Self-Healing Agent</h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem' }}>
-                      Dual-Layer AI Classifier (Regex + Gemini 1.5 Flash) · Live GitHub PRs &amp; Jira Tickets · 69.8% MTTR Reduction
+                      Dual-Layer AI Classifier (Regex + Gemini 3.5 Flash Lite) · Live GitHub PRs &amp; Jira Tickets · 69.8% MTTR Reduction
                     </p>
                   </div>
                 </div>
@@ -832,7 +832,7 @@
                 <div className="kpi-grid">
                   <div className="spotlight-card kpi-card kpi-blue"><div className="spotlight-inner"><div className="kpi-label">Total Logs</div><div className="kpi-val">{analytics?.total_logs || 20}</div><div className="kpi-sub">Analyzed</div></div></div>
                   <div className="spotlight-card kpi-card kpi-purple"><div className="spotlight-inner"><div className="kpi-label">Regex Layer 1</div><div className="kpi-val">{analytics?.source_counts?.regex || 18}</div><div className="kpi-sub">Deterministic</div></div></div>
-                  <div className="spotlight-card kpi-card kpi-cyan"><div className="spotlight-inner"><div className="kpi-label">Gemini LLM</div><div className="kpi-val">{analytics?.source_counts?.llm || 2}</div><div className="kpi-sub">Flash 1.5</div></div></div>
+                  <div className="spotlight-card kpi-card kpi-cyan"><div className="spotlight-inner"><div className="kpi-label">Gemini LLM</div><div className="kpi-val">{analytics?.source_counts?.llm || 2}</div><div className="kpi-sub">3.5 Flash Lite</div></div></div>
                   <div className="spotlight-card kpi-card kpi-slate"><div className="spotlight-inner"><div className="kpi-label">MTTR Before</div><div className="kpi-val">15.1</div><div className="kpi-sub">Minutes (Manual)</div></div></div>
                   <div className="spotlight-card kpi-card kpi-green"><div className="spotlight-inner"><div className="kpi-label">MTTR After</div><div className="kpi-val">4.6</div><div className="kpi-sub">↓ 69.8% Faster</div></div></div>
                   <div className="spotlight-card kpi-card kpi-amber"><div className="spotlight-inner"><div className="kpi-label">Time Saved</div><div className="kpi-val">10.5</div><div className="kpi-sub">Min / Issue Saved</div></div></div>
@@ -902,7 +902,7 @@
                       <div className={`arch-node ${activeArchNode === 3 ? 'active' : ''}`} onClick={() => setActiveArchNode(3)}>
                         <div className="arch-node-num">3</div>
                         <div className="arch-node-title">Layer 2: Gemini LLM</div>
-                        <div className="arch-node-desc">Few-shot prompted Flash 1.5 for ambiguous anomalies</div>
+                        <div className="arch-node-desc">Few-shot prompted 3.5 Flash Lite for ambiguous anomalies</div>
                       </div>
 
                       <div className="arch-connector">➔</div>
@@ -931,14 +931,14 @@
                     <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--neon-cyan)', marginBottom: '0.4rem' }}>
                       {activeArchNode === 1 && "Step 1: REST API Jenkins Ingestion"}
                       {activeArchNode === 2 && "Step 2: Layer 1 Deterministic Regex Classification"}
-                      {activeArchNode === 3 && "Step 3: Layer 2 Gemini 1.5 Flash LLM Fallback"}
+                      {activeArchNode === 3 && "Step 3: Layer 2 Gemini 3.5 Flash Lite LLM Fallback"}
                       {activeArchNode === 4 && "Step 4: Autonomous Self-Healing Remediation"}
                       {activeArchNode === 5 && "Step 5: Relational Persistence & Real-time WebSockets/SSE"}
                     </div>
                     <div style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
                       {activeArchNode === 1 && "The agent connects to Jenkins at /job/{name}/lastBuild/consoleText and /testReport/api/json via Basic Auth with encrypted API tokens. In Demo Mode, it reads from the local 20 labeled datasets."}
                       {activeArchNode === 2 && "Scans for 6 failure categories (Flaky Test, Dependency Issue, Infrastructure Issue, Code Defect, Configuration Error, Timeout) in sub-millisecond time. Resolves 90% of failures instantly."}
-                      {activeArchNode === 3 && "When confidence is Low or pattern matching is inconclusive, the full console trace is sent to Google Gemini 1.5 Flash to reason over the root cause and generate structured remediation JSON."}
+                      {activeArchNode === 3 && "When confidence is Low or pattern matching is inconclusive, the full console trace is sent to Google Gemini 3.5 Flash Lite to reason over the root cause and generate structured remediation JSON."}
                       {activeArchNode === 4 && "Directly triggers the fix: Auto-retries flaky tests with backoff via Jenkins API, opens GitHub Pull Requests for missing packages or syntax errors, files Atlassian Jira bugs, or alerts ops."}
                       {activeArchNode === 5 && "Every event, failure analysis, and external URL is saved in SQLAlchemy database and broadcasted live to connected web clients via Server-Sent Events."}
                     </div>
