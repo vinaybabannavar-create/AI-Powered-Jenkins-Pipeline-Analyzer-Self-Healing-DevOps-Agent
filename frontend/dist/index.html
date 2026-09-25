@@ -231,32 +231,90 @@
       flex: 1;
     }
 
-    /* Glassmorphic Cyber Cards */
+    /* Glassmorphic Cyber Cards with Moving Border Light */
+    @property --border-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
     .spotlight-card {
       position: relative;
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: #000000;
       border-radius: 20px;
-      border: 1px solid var(--border-glass);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       overflow: hidden;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .spotlight-card::before {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
       background: radial-gradient(
         400px circle at var(--card-mouse-x, -500px) var(--card-mouse-y, -500px),
-        rgba(99, 102, 241, 0.18), rgba(6, 182, 212, 0.06) 50%, transparent 80%
+        rgba(99, 102, 241, 0.22), rgba(6, 182, 212, 0.12) 50%, transparent 80%
       );
       pointer-events: none; opacity: 0; transition: opacity 0.3s ease; z-index: 1;
     }
     .spotlight-card:hover::before { opacity: 1; }
+
+    /* Animated Border Light beam moving around every card */
+    .spotlight-card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 20px;
+      padding: 1.5px;
+      background: conic-gradient(
+        from var(--border-angle, 0deg),
+        transparent 60%,
+        rgba(6, 182, 212, 0.95) 80%,
+        rgba(99, 102, 241, 0.95) 92%,
+        transparent 100%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: borderMove 5s linear infinite;
+      z-index: 5;
+    }
+
+    @keyframes borderMove {
+      to {
+        --border-angle: 360deg;
+      }
+    }
+
     .spotlight-card:hover {
-      border-color: rgba(99, 102, 241, 0.45);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.55);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 35px rgba(6, 182, 212, 0.25);
       transform: translateY(-3px);
     }
-    .spotlight-inner { position: relative; z-index: 2; }
+    .spotlight-inner { position: relative; z-index: 6; }
+
+    /* High-Level Glowing Jenkins Job Button */
+    .btn-jenkins-job {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.45rem 0.95rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.4);
+      text-decoration: none !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .btn-jenkins-job:hover {
+      background: linear-gradient(135deg, #0369a1, #4f46e5);
+      box-shadow: 0 0 28px rgba(6, 182, 212, 0.75);
+      transform: translateY(-2px);
+      color: #ffffff !important;
+    }
 
     /* Multi-Color Legendary Buttons */
     .btn {
@@ -1050,10 +1108,10 @@
                           <div style={{ flex: 1, height: '5px', background: p.status === 'SUCCESS' ? 'var(--neon-emerald)' : '#334155', borderRadius: '3px' }} title="Deploy: ABORTED"></div>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div className="pipe-action"><span>⚡</span><span>{p.action || 'Auto-healing active'}</span></div>
-                          <a href={`http://localhost:5000/job/${p.name}`} target="_blank" rel="noreferrer" className="ext-link">
-                            Jenkins Job ↗
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+                          <div className="pipe-action" style={{ flex: 1, minWidth: 0 }}><span>⚡</span><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.action || 'Auto-healing active'}</span></div>
+                          <a href={`http://localhost:5000/job/${p.name}`} target="_blank" rel="noreferrer" className="btn-jenkins-job">
+                            ⚙️ Open Jenkins Job ↗
                           </a>
                         </div>
                       </div>
